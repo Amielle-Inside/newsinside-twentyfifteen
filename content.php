@@ -54,22 +54,19 @@
 						__( 'Continuar lendo %s', 'twentyfifteen' ),
 						the_title( '<span class="screen-reader-text">', '</span>', false )
 					)
-				);
+				); // [NI] label idem; the_content() ecoa sem whitespace extra
 			else :
 				// Sem resumo: excerpt automatico (55 palavras) + botao explicito.
 				the_excerpt();
 			endif;
 			?>
 			<p class="ni-continue-reading">
-				<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark">
-					<?php
-					printf(
-						__( 'Continuar lendo %s', 'twentyfifteen' ),
-						the_title( '<span class="screen-reader-text">', '</span>', false )
-					);
-					?>
-					<span aria-hidden="true">&rarr;</span>
-				</a>
+				<?php
+				// [NI 2026-10-13] Label do CTA: verbo direto, 2 palavras visíveis,
+				// título só para leitores de tela (confiança + contexto) — sem whitespace do template.
+				$ni_sr_title = the_title( '<span class="screen-reader-text">', '</span>', false );
+				?>
+				<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), $ni_sr_title ); ?><span aria-hidden="true">&rarr;</span></a>
 			</p>
 			<?php
 		endif;

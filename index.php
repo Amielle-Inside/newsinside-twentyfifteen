@@ -91,13 +91,10 @@ get_header(); ?>
 						<?php the_title( '<h1 class="entry-title"> <a href="'.get_permalink().'">', '</a></h1>' ); ?>
 					</header><!-- .entry-header -->
 
-					<div class="entry-excerpt" style="margin: 8px 32px;">
+					<div class="entry-excerpt">
 						<?php the_excerpt(); ?>
-						<p class="ni-continue-reading" style="margin: 8px 32px;">
-							<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark">
-								<?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), the_title( '<span class="screen-reader-text">', '</span>', false ) ); ?>
-								<span aria-hidden="true">&rarr;</span>
-							</a>
+						<p class="ni-continue-reading">
+							<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), the_title( '<span class="screen-reader-text">', '</span>', false ) ); ?><span aria-hidden="true">&rarr;</span></a>
 						</p>
 						<?php
 							/*
