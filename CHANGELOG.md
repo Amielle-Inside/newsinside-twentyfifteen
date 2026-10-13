@@ -90,3 +90,15 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 ### Adicionado
 - Persistência Light/Dark Side: cookie `ni-theme` (1 ano) + localStorage; `functions.php` aplica
   server-side → sem flash de tema errado. Verificado com reloads nos dois sentidos.
+
+## Nota de diagnóstico — 13/10/2026 (sem mudança de arquivo)
+### wptelegram-ajax-widget não carregava (iframe em branco)
+- **Causa raiz (fora do tema):** plugin WP Telegram Widget v2.2.16 configurado com
+  "Telegram blocked = Sim" + proxy Google Apps Script encerrado pelo Google (HTTP 403).
+  A resposta vazia ficou presa no transient de cache (renovando vazio a cada hora) —
+  o endpoint `/wptelegram/widget/view/@username/` devolvia 0 bytes.
+- **Fix aplicado (DB do WP):** `telegram_blocked` → `0`; transients vazios apagados.
+  O servidor da Locaweb alcança `t.me/s/` diretamente (200 OK).
+- **Limitação do Telegram:** o widget exibe feed público apenas de **canais**.
+  `@newsinsidechat` é **grupo** → carrega a moldura, mas sem mensagens.
+  `@newsinside` (canal) carrega as 301 mensagens normalmente.
