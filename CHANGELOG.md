@@ -102,3 +102,13 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 - **Limitação do Telegram:** o widget exibe feed público apenas de **canais**.
   `@newsinsidechat` é **grupo** → carrega a moldura, mas sem mensagens.
   `@newsinside` (canal) carrega as 301 mensagens normalmente.
+
+## [2.7.8] - 2026-10-13
+### Adicionado
+- Compatibilidade AdSense (Auto Ads via Site Kit): meta `color-scheme` (light dark) no
+  `header.php`; `color-scheme: dark` computado quando `body.ni-dark` ativo — os slots
+  `<ins.adsbygoogle>` herdam o scheme e o Google serve anúncios na cor do tema.
+- `.google-auto-placed { max-width: 100% }` (slots nunca estouram a coluna).
+### Verificado
+- 9 slots auto-injetados, 2 renderizando 893×280 full-width, sem overflow, no light e
+  no dark; anúncios permanecem visíveis com dark ativo.
