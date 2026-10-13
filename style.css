@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.16
+Version: 2.7.17
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6198,9 +6198,11 @@ p > video {
 	aspect-ratio: 743 / 292;
 	object-fit: cover;
 }
-/* [NI 2026-10-12 v2.6.5] Aproximar site-branding do #secondary: margin-bottom 74px (7.6923%) → 12px */
+/* [NI 2026-10-13 v2.7.17] Revisto: gap masthead→secondary em 0 — o border-bottom
+   do .site-header já separa visualmente; margem extra aparecia como faixa do
+   fundo da página (principalmente no dark) = "quebra" entre os painéis. */
 #masthead {
-	margin-bottom: 12px;
+	margin-bottom: 0;
 }
 
 /* [NI 2026-10-13 v2.7.4] Fix final embeds bfg: seletor id-attribute p/ vencer inline do plugin */
@@ -6534,13 +6536,14 @@ body.ni-dark .bfg-wrap a {
 .ni-theme-toggle {
 	margin: 1em 0 0;
 	display: flex;
+	flex-wrap: wrap;
 	gap: 0.5em;
 }
 
 .ni-theme-toggle .ni-side-btn {
-	flex: 1 1 0;
 	display: inline-block;
 	padding: 0.45em 0.9em;
+	white-space: nowrap; /* desktop: nunca quebrar linha — altura original preservada */
 	font-family: inherit;
 	font-size: 1.4rem;
 	font-weight: 700;
