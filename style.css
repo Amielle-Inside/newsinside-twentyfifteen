@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.8
+Version: 2.7.9
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6197,6 +6197,62 @@ body.ni-dark div[id^="bfg-wrap-"] .bfg-header {
 body.ni-dark div[id^="bfg-wrap-"] a {
 	background-color: transparent !important;
 	color: #a3c9ff !important;
+}
+
+/* == [NI 2026-10-13 v2.7.9] Transição suave Light↔Dark + toggle mobile == */
+/* Sem flashbang: classe aplicada só durante a troca (JS adiciona/remover em ~550ms).
+   Fora da troca, hovers e interações normais não são afetados. */
+body.ni-theme-anim,
+body.ni-theme-anim *,
+body.ni-theme-anim *::before,
+body.ni-theme-anim *::after {
+	transition:
+		background-color 0.45s ease,
+		color 0.45s ease,
+		border-color 0.45s ease,
+		box-shadow 0.45s ease,
+		outline-color 0.45s ease,
+		fill 0.45s ease,
+		stroke 0.45s ease !important;
+	transition-delay: 0s !important;
+}
+
+/* Acessibilidade: respeita usuários com movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+	body.ni-theme-anim,
+	body.ni-theme-anim *,
+	body.ni-theme-anim *::before,
+	body.ni-theme-anim *::after {
+		transition: none !important;
+	}
+}
+
+/* ===== Toggle no mobile: alvo de toque generoso, sem mexer no desktop ===== */
+@media screen and (max-width: 59.6874em) {
+	.ni-theme-toggle {
+		margin: 0.9em 0 0.75em; /* respiro entre descrição e botão "Menu and widgets" */
+	}
+
+	.ni-theme-toggle .ni-side-btn {
+		flex: 1 1 0;              /* larguras iguais, lado a lado */
+		min-height: 44px;         /* alvo de toque mínimo (Apple HIG / Material) */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.5rem;
+		border-width: 2px;        /* contorno mais visível em telas pequenas */
+		border-radius: 6px;
+		-webkit-tap-highlight-color: rgba(138, 180, 248, 0.25);
+	}
+
+	/* lado ativo sempre com anel visível no mobile */
+	body:not(.ni-dark) .ni-theme-toggle .ni-side-btn--light,
+	body.ni-dark .ni-theme-toggle .ni-side-btn--dark {
+		box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.25), 0 1px 4px rgba(0, 0, 0, 0.15);
+	}
+	body.ni-dark .ni-theme-toggle .ni-side-btn--dark {
+		box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25), 0 1px 4px rgba(0, 0, 0, 0.4);
+	}
 }
 
 /* == [NI 2026-10-13 v2.7.8] Compatibilidade AdSense (Site Kit) com o tema == */

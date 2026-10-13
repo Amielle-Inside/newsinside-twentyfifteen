@@ -61,6 +61,12 @@
 						<script>
 						(function() {
 							function niApply(side) {
+								// [NI 2026-10-13 v2.7.9] transição suave — sem flashbang
+								document.body.classList.add('ni-theme-anim');
+								clearTimeout(window.__niAnimTimer);
+								window.__niAnimTimer = setTimeout(function() {
+									document.body.classList.remove('ni-theme-anim');
+								}, 550);
 								document.body.classList.toggle('ni-dark', side === 'dark');
 								try { localStorage.setItem('ni-theme', side); } catch (e) {}
 								try { document.cookie = 'ni-theme=' + side + ';path=/;max-age=31536000;samesite=lax'; } catch (e) {}
