@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.6.5
+Version: 2.7.1
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6184,4 +6184,203 @@ p > video {
 #masthead {
 	margin-bottom: 12px;
 }
+
+/* == [NI 2026-10-13 v2.7.1] Containers brancos do tema no dark mode == */
+/* .hentry = card do post (título+resumo+thumb); .secondary = coluna widget;
+   demais superfícies pintadas de #fff pelo tema original */
+body.ni-dark .hentry,
+body.ni-dark .secondary,
+body.ni-dark .site-header,
+body.ni-dark .site-footer,
+body.ni-dark .page-header,
+body.ni-dark .page-content,
+body.ni-dark .comments-area,
+body.ni-dark .post-navigation,
+body.ni-dark .pagination,
+body.ni-dark .widecolumn {
+	background-color: #1f1f1f;
+}
+
+/* bordas suaves entre elementos */
+body.ni-dark .hentry,
+body.ni-dark .site-header,
+body.ni-dark .site-footer,
+body.ni-dark .page-header,
+body.ni-dark .comments-area,
+body.ni-dark .post-navigation,
+body.ni-dark .pagination {
+	border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* inputs em foco */
+body.ni-dark input:focus,
+body.ni-dark textarea:focus {
+	background-color: #262626;
+	color: #e6e6e6;
+	border-color: #8ab4f8;
+}
+
+/* mark/ins destacados em dark */
+body.ni-dark mark,
+body.ni-dark ins {
+	background-color: #5a4a1a;
+	color: #ffe082;
+}
+
+/* sticky post badge */
+body.ni-dark .sticky-post {
+	background-color: #8ab4f8;
+	color: #141414;
+}
+
+/* paginação (botões pretos viram invertidos) */
+body.ni-dark .pagination .prev,
+body.ni-dark .pagination .next,
+body.ni-dark .page-links a,
+body.ni-dark .widget_calendar tbody a {
+	background-color: #333;
+	color: #e6e6e6;
+}
+body.ni-dark .pagination .prev:hover,
+body.ni-dark .pagination .next:hover,
+body.ni-dark .page-links a:hover,
+body.ni-dark .widget_calendar tbody a:hover,
+body.ni-dark .widget_calendar tbody a:focus {
+	background-color: #8ab4f8;
+	color: #141414;
+}
+
+/* ================================================================
+   [NI DARK MODE v2.7.0 — 2026-10-13] Esqueleto dark (admin-only por enquanto)
+   Paleta: bg #141414, painéis #1f1f1f, texto #e6e6e6, links #8ab4f8,
+   accent #a3c9ff, bordas rgba(255,255,255,.08)
+   Ativado via body.ni-dark (injetada pelo functions.php para admins)
+   ================================================================ */
+body.ni-dark {
+	background-color: #141414;
+	color: #e6e6e6;
+}
+
+/* Fundo do "main" e da sidebar (o tema pinta o main de branco via body::before) */
+body.ni-dark::before {
+	background-color: #1f1f1f !important;
+}
+
+/* Cards secundários */
+body.ni-dark .secondary {
+	background-color: #1f1f1f;
+	color: #e6e6e6;
+}
+
+/* Títulos e textos */
+body.ni-dark .site-title a,
+body.ni-dark .site-description {
+	color: #e6e6e6;
+}
+body.ni-dark .entry-title a,
+body.ni-dark .entry-title {
+	color: #f0f0f0;
+}
+body.ni-dark .entry-content,
+body.ni-dark .entry-summary,
+body.ni-dark .entry-excerpt,
+body.ni-dark .widget,
+body.ni-dark .widget a,
+body.ni-dark .main-navigation a,
+body.ni-dark .post-navigation a,
+body.ni-dark .page-navigation,
+body.ni-dark .comments-area,
+body.ni-dark .comments-area .comment-author cite {
+	color: #e6e6e6;
+}
+
+/* Metadados (data, autor) mais discretos */
+body.ni-dark .entry-meta,
+body.ni-dark .entry-footer,
+body.ni-dark .posted-on a,
+body.ni-dark .byline a,
+body.ni-dark .tags-links a,
+body.ni-dark .entry-footer a {
+	color: #b8b8b8;
+}
+
+/* Links internos com azul suave */
+body.ni-dark .entry-content a,
+body.ni-dark .entry-summary a,
+body.ni-dark .comment-content a,
+body.ni-dark .textwidget a {
+	color: #8ab4f8;
+}
+body.ni-dark .entry-content a:hover,
+body.ni-dark .entry-summary a:hover {
+	color: #a3c9ff;
+}
+
+/* Busca e formulários */
+body.ni-dark .search-field {
+	background-color: #262626;
+	color: #e6e6e6;
+	border-color: rgba(255, 255, 255, 0.15);
+}
+body.ni-dark .search-submit {
+	background-color: #333;
+	border-color: rgba(255, 255, 255, 0.15);
+}
+body.ni-dark input,
+body.ni-dark textarea,
+body.ni-dark select {
+	background-color: #262626;
+	color: #e6e6e6;
+	border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Botão Continuar Lendo (herda accent do tema, agora em dark) */
+body.ni-dark .ni-continue-reading .more-link,
+body.ni-dark .entry-content > p > .more-link {
+	background: #8ab4f8;
+	color: #141414;
+}
+body.ni-dark .ni-continue-reading .more-link:hover,
+body.ni-dark .entry-content > p > .more-link:hover {
+	background: #a3c9ff;
+	color: #141414;
+}
+
+/* Blockquote, código, tabelas */
+body.ni-dark blockquote,
+body.ni-dark .entry-content blockquote {
+	color: #cfcfcf;
+	border-color: #8ab4f8;
+}
+body.ni-dark pre,
+body.ni-dark code {
+	background-color: #262626;
+	color: #e6e6e6;
+}
+body.ni-dark table {
+	color: #e6e6e6;
+}
+body.ni-dark img {
+	border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Ajuste do logo (luminância 92/255 — logo escuro: um brilho suave não resolve,
+   mas filter invert destrói cores. Elevando brightness p/ dark: */
+body.ni-dark .custom-logo {
+	filter: brightness(1.15) saturate(1.05);
+}
+
+/* ::selection e scrollbar sutil */
+body.ni-dark ::selection {
+	background: #8ab4f8;
+	color: #141414;
+}
+body.ni-dark ::-webkit-scrollbar {
+	background: #141414;
+}
+body.ni-dark ::-webkit-scrollbar-thumb {
+	background: #333;
+	border-radius: 4px;
+}
+/* == fim NI DARK MODE == */
 /* == fim [NI] == */
