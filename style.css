@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.15
+Version: 2.7.16
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6215,6 +6215,47 @@ body.ni-dark div[id^="bfg-wrap-"] .bfg-header {
 body.ni-dark div[id^="bfg-wrap-"] a {
 	background-color: transparent !important;
 	color: #a3c9ff !important;
+}
+
+/* == [NI 2026-10-13 v2.7.16] Sidebar: largura do guia (240-300px) + item ativo == */
+/* #1 Largura ideal: fechar a sidebar de 29.4118% (372-413px) para 21.4286%
+      (=300px no max-width do tema). Grid compensa: conteúdo ganha os px de volta. */
+@media screen and (min-width: 59.6875em) {
+	body:before {
+		width: 21.4286%;
+	}
+	.sidebar {
+		max-width: 300px;
+		width: 21.4286%;
+	}
+	.site-content {
+		margin-left: 21.4286%;
+		width: 78.5714%;
+	}
+	/* paddings internos recalibrados para a nova largura */
+	.main-navigation .nav-menu,
+	.main-navigation ul.nav-menu {
+		max-height: calc(100vh - 200px);
+	}
+}
+
+/* #7 Seção ativa: o item do menu da página atual se destaca —
+      fundo suave + bold (estados: normal/hover/ativo bem distintos) */
+.main-navigation .current-menu-item > a,
+.main-navigation .current_page_item > a,
+.main-navigation .current-menu-ancestor > a,
+.main-navigation .current_page_ancestor > a {
+	background-color: rgba(51, 51, 51, 0.1);
+	border-radius: 4px;
+	font-weight: 700;
+	color: #333;
+}
+body.ni-dark .main-navigation .current-menu-item > a,
+body.ni-dark .main-navigation .current_page_item > a,
+body.ni-dark .main-navigation .current-menu-ancestor > a,
+body.ni-dark .main-navigation .current_page_ancestor > a {
+	background-color: rgba(255, 255, 255, 0.13);
+	color: #f1f1f1;
 }
 
 /* == [NI 2026-10-13 v2.7.15] Menu lateral: melhorias de usabilidade (guia de sidebars) == */
