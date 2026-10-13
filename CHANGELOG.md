@@ -160,3 +160,10 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   do template PHP; título do post só para leitores de tela (span.screen-reader-text).
 - Inline styles de margem removidos do index.php; viraram regra CSS
   (.entry-excerpt: margin 8px 32px desktop / 8px 24px mobile + respiro 32/24px).
+
+## [2.7.14] - 2026-10-13
+### Corrigido
+- Anti-CLS nas thumbs (Firefox Android): .post-thumbnail com aspect-ratio 743/292,
+  overflow hidden e bg branco; img com aspect-ratio + object-fit cover. O espaço da
+  imagem é reservado no primeiro paint — corrige a "faixa do fundo acima da thumb"
+  causada por lazy+srcset/sizes=auto (Optimization Detective) no Gecko Android.
