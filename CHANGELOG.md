@@ -128,3 +128,15 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 - Residual conhecido: 1 deprecated no `/wp-login.php` (página de admin, sem impacto público/SEO).
 - Tema v2.7.8 compatível com PHP 8.5: nenhum uso de recursos removidos (testado: home,
   single, archive, search, feed, widget REST — todos 200 sem warnings do tema).
+
+## [2.7.9] - 2026-10-13
+### Adicionado
+- Transição suave na troca Light/Dark Side (sem flashbang): classe `ni-theme-anim` só
+  durante a troca (550ms), transições 0.45s em bg/cor/borda/sombra de todos os elementos;
+  respeita `prefers-reduced-motion`.
+- Toggle mobile (≤59.68em): alvo de toque 44px mínimo, borda 2px, larguras iguais,
+  anel ativo com sombra, margens sem colisão com "Menu and widgets".
+- Desktop: posição inalterada (abaixo do site description).
+### Verificado
+- 375px: 125×44px por botão, visível sem scroll, sem overflow; 320px: 102×57px cliques OK;
+  1280px: mesma posição; animação computada em 0.45s e removida após a troca.
