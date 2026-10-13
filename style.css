@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.4
+Version: 2.7.5
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6266,50 +6266,48 @@ body.ni-dark .bfg-wrap a {
 	background: transparent;
 }
 
-/* Light Side: dourado (Jedi) */
+/* Light Side: branco/luz */
 .ni-theme-toggle .ni-side-btn--light {
-	color: #8a6d1a;
-	border-color: #b8912f;
+	color: #333;
+	border-color: #333;
+	background: #fff;
 }
 .ni-theme-toggle .ni-side-btn--light:hover,
 .ni-theme-toggle .ni-side-btn--light:focus {
-	background: #b8912f;
-	color: #fff;
+	background: #e8e8e8;
+	color: #000;
 }
 
-/* DarkSide: vermelho (Sith) */
+/* Dark Side: preto/sombrio */
 .ni-theme-toggle .ni-side-btn--dark {
-	color: #a03030;
-	border-color: #c04040;
+	color: #e6e6e6;
+	border-color: #e6e6e6;
+	background: #1a1a1a;
 }
 .ni-theme-toggle .ni-side-btn--dark:hover,
 .ni-theme-toggle .ni-side-btn--dark:focus {
-	background: #c04040;
+	background: #000;
 	color: #fff;
 }
 
-/* Estado ativo (lado escolhido) */
-body:not(.ni-dark) .ni-side-btn--light,
-body.ni-dark .ni-side-btn--dark {
-	background: #b8912f;
-	color: #fff;
-	border-color: #b8912f;
+/* Estado ativo: lado escolhido fica destacado com anel */
+body:not(.ni-dark) .ni-side-btn--light {
+	box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.25);
 }
 body.ni-dark .ni-side-btn--dark {
-	background: #c04040;
-	color: #fff;
-	border-color: #c04040;
+	box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
-/* No dark mode, os botões ajustam contraste */
+/* No dark mode, o Light Side continua branco (representa a luz) */
 body.ni-dark .ni-theme-toggle .ni-side-btn--light {
-	color: #d4b04a;
-	border-color: #d4b04a;
+	background: #fff;
+	color: #333;
+	border-color: #fff;
 }
 body.ni-dark .ni-theme-toggle .ni-side-btn--light:hover,
 body.ni-dark .ni-theme-toggle .ni-side-btn--light:focus {
-	background: #d4b04a;
-	color: #141414;
+	background: #e8e8e8;
+	color: #000;
 }
 
 /* == [NI 2026-10-13 v2.7.2] Contraste dark: fundos claros restantes + textos == */
@@ -6549,16 +6547,17 @@ body.ni-dark select {
 	border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Botão Continuar Lendo (herda accent do tema, agora em dark) */
+/* Botão Continuar Lendo no dark: branco com texto escuro (contraste máximo) */
 body.ni-dark .ni-continue-reading .more-link,
 body.ni-dark .entry-content > p > .more-link {
-	background: #8ab4f8;
+	background: #e6e6e6;
 	color: #141414;
 }
 body.ni-dark .ni-continue-reading .more-link:hover,
 body.ni-dark .entry-content > p > .more-link:hover {
-	background: #a3c9ff;
+	background: #fff;
 	color: #141414;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Blockquote, código, tabelas */

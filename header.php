@@ -54,7 +54,7 @@
 						?>
 						<div class="ni-theme-toggle" role="group" aria-label="Escolher tema">
 							<button type="button" class="ni-side-btn ni-side-btn--light" data-ni-side="light">Light Side</button>
-							<button type="button" class="ni-side-btn ni-side-btn--dark" data-ni-side="dark">DarkSide</button>
+							<button type="button" class="ni-side-btn ni-side-btn--dark" data-ni-side="dark">Dark Side</button>
 						</div>
 						<script>
 						(function() {
