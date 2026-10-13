@@ -167,3 +167,10 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   overflow hidden e bg branco; img com aspect-ratio + object-fit cover. O espaço da
   imagem é reservado no primeiro paint — corrige a "faixa do fundo acima da thumb"
   causada por lazy+srcset/sizes=auto (Optimization Detective) no Gecko Android.
+
+## [2.7.15] - 2026-10-13
+### Adicionado
+- Menu lateral (guia de sidebars; .ni-theme-toggle intocado): hover/focus-visible em
+  todos os itens (antes invisíveis); scroll independente do painel no desktop
+  (max-height calc(100vh-220px), overflow-y auto); seta do toggle girando 45° quando
+  aberto; hierarquia de submenu com guia lateral + 14px; dark mode com hover invertido.
