@@ -153,3 +153,10 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   `.entry-excerpt`/`.entry-summary` têm padding-bottom 32px (desktop) / 24px (mobile);
   CTA com margin-top 1.25em; foco visible com outline #8ab4f8 (4ª pista de clique).
   Respiro final: 40px desktop / 32px mobile. v2.7.12 = cache-bust.
+
+## [2.7.13] - 2026-10-13
+### Corrigido
+- Label do CTA: "Continuar lendo →" (visual) sem os 7-23 tabs de whitespace que vazavam
+  do template PHP; título do post só para leitores de tela (span.screen-reader-text).
+- Inline styles de margem removidos do index.php; viraram regra CSS
+  (.entry-excerpt: margin 8px 32px desktop / 8px 24px mobile + respiro 32/24px).
