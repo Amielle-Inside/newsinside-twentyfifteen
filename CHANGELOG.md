@@ -63,3 +63,14 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   badge `.sticky-post` e botões de paginação/calendário invertidos.
 
 [2.7.1]: https://github.com/Amiell3/newsinside-twentyfifteen/releases/tag/v2.7.1
+
+## [2.7.3] / [2.7.4] - 2026-10-13
+### Adicionado
+- Seletores **Light Side / DarkSide** abaixo do site-description (admin-only durante preview):
+  alternam dark instantaneamente via JS + persistência em localStorage.
+### Corrigido
+- Contraste WCAG AA: `.entry-footer` `#f7f7f7→#262626`; metadados `#c8c8c8`; links `#a3c9ff`;
+  figcaption, imprint, hr, dropdown, botões; embeds GitHub (bfg) com fundo branco inline do
+  plugin cobertos por seletor de atributo `div[id^="bfg-wrap-"]` + `!important`.
+- Auditoria automatizada de contraste: 0 problemas em home/archive/single.
+- Testes responsivos 320/375/768/1440/1920px: sem overflow ou cortes.
