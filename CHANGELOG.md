@@ -185,3 +185,13 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 ### Não aplicados (guia de app, não de blog)
 - Troca de contas, sidebar secundária, resize arrastável, busca embutida,
   ações inline, modo colapsado 48-64px.
+
+## [2.7.17] - 2026-10-13
+### Corrigido (regressões apontadas no print, dark/desktop)
+- Botões Light/Dark Side esticados (77x57): flex 1 1 0 estava no BASE (deveria ser
+  só mobile) + sidebar estreita da v2.7.16 → rótulo quebrava em 2 linhas. Desktop
+  volta a inline-block + nowrap: 111x36/107x36 (altura original); mobile 125x44
+  intocado.
+- Quebra masthead→secondary: #masthead margin-bottom 12px (v2.6.5) vazava fundo
+  rgb(20,20,20) entre os painéis no dark. Agora 0 (o border-bottom do site-header
+  separa). Gap medido: 0px.
