@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.5
+Version: 2.7.7
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6199,6 +6199,52 @@ body.ni-dark div[id^="bfg-wrap-"] a {
 	color: #a3c9ff !important;
 }
 
+/* == [NI 2026-10-13 v2.7.6] Ícones Genericons (dropdown + metas) no dark == */
+/* Setas do dropdown dos submenus: #333 invisível sobre #1f1f1f */
+body.ni-dark .dropdown-toggle:after,
+body.ni-dark .secondary-toggle:before,
+body.ni-dark .dropdown-toggle.toggle-on:after {
+	color: #e6e6e6;
+}
+
+/* Hover/foco do dropdown no dark: fundo claro com ícone escuro (inverte) */
+body.ni-dark .dropdown-toggle:hover,
+body.ni-dark .dropdown-toggle:focus {
+	background-color: #e6e6e6;
+}
+body.ni-dark .dropdown-toggle:hover:after,
+body.ni-dark .dropdown-toggle:focus:after {
+	color: #141414;
+}
+body.ni-dark .dropdown-toggle:focus {
+	outline: 1px solid #8ab4f8;
+}
+
+/* Ícones dos metadados (calendário, autor, pasta, tag, balão de comentários) herdam
+   a cor do texto-meta; garantindo explicitamente no dark: */
+body.ni-dark .posted-on:before,
+body.ni-dark .byline:before,
+body.ni-dark .cat-links:before,
+body.ni-dark .tags-links:before,
+body.ni-dark .comments-link:before,
+body.ni-dark .entry-format:before,
+body.ni-dark .edit-link:before,
+body.ni-dark .full-size-link:before {
+	color: #c8c8c8;
+}
+
+/* Navegação de comentários e post-nav (setas ← →) */
+body.ni-dark .comment-navigation .nav-next a:after,
+body.ni-dark .comment-navigation .nav-previous a:before,
+body.ni-dark .post-navigation .nav-next a:after,
+body.ni-dark .post-navigation .nav-previous a:before,
+body.ni-dark .image-navigation .nav-next a:after,
+body.ni-dark .image-navigation .nav-previous a:before,
+body.ni-dark .pagination .prev:before,
+body.ni-dark .pagination .next:after {
+	color: #a3c9ff;
+}
+
 /* == [NI 2026-10-13 v2.7.3] Embeds GitHub (bfg) no dark + seletores Light/Dark Side == */
 body.ni-dark .bfg-wrap,
 body.ni-dark .bfg-wrap *,
@@ -6342,13 +6388,9 @@ body.ni-dark .post-edit-link {
 	color: #c8c8c8;
 }
 
-/* hr e dropdown */
+/* hr (dropdown hover agora coberto pelo bloco v2.7.6) */
 body.ni-dark hr {
 	background-color: rgba(255, 255, 255, 0.12);
-}
-body.ni-dark .dropdown-toggle:hover,
-body.ni-dark .dropdown-toggle:focus {
-	background-color: #333;
 }
 
 /* botões de formulário base */

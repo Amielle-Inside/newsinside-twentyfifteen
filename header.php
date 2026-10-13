@@ -61,15 +61,20 @@
 							function niApply(side) {
 								document.body.classList.toggle('ni-dark', side === 'dark');
 								try { localStorage.setItem('ni-theme', side); } catch (e) {}
+								try { document.cookie = 'ni-theme=' + side + ';path=/;max-age=31536000;samesite=lax'; } catch (e) {}
 							}
 							document.addEventListener('click', function(e) {
 								var btn = e.target.closest('.ni-side-btn');
 								if (!btn) return;
 								niApply(btn.getAttribute('data-ni-side'));
 							});
-							// Estado inicial: preferência salva; senão, escuro (preview padrão para admin)
+							// Estado inicial: preferência salva (localStorage > cookie); senão, escuro (preview padrão para admin)
 							var saved = null;
 							try { saved = localStorage.getItem('ni-theme'); } catch (e) {}
+							if (saved !== 'light' && saved !== 'dark') {
+								var m = document.cookie.match(/(?:^|;\s*)ni-theme=(light|dark)\b/);
+								if (m) { saved = m[1]; }
+							}
 							if (saved === 'light' || saved === 'dark') { niApply(saved); }
 						})();
 						</script>

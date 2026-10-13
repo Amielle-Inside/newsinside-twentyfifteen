@@ -1192,11 +1192,15 @@ remove_action('wp_print_styles', 'print_emoji_styles');
 // (preview privado do dark mode enquanto não liberamos pro público)
 // ==================================================================
 function ni_dark_mode_admin_preview( $classes ) {
-	// [NI 2026-10-13] Preview do dark mode: classe padrão para admins.
-	// A preferência salva em localStorage (seletor Light Side/DarkSide no header.php)
-	// sobrescreve no JS imediatamente após o load — aqui só garantimos o default dark.
+	// [NI 2026-10-13] Preview do dark mode (admin-only por enquanto).
+	// Preferência persistida em cookie 'ni-theme' (gravado pelo seletor Light Side/Dark Side):
+	// - 'light' → admin escolheu Light Side: SEM a classe (sem flash de tema errado)
+	// - 'dark' ou ausente → dark (padrão do preview)
 	if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
-		$classes[] = 'ni-dark';
+		$side = isset( $_COOKIE['ni-theme'] ) ? sanitize_key( wp_unslash( $_COOKIE['ni-theme'] ) ) : '';
+		if ( 'light' !== $side ) {
+			$classes[] = 'ni-dark';
+		}
 	}
 	return $classes;
 }
