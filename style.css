@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.14
+Version: 2.7.15
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6215,6 +6215,69 @@ body.ni-dark div[id^="bfg-wrap-"] .bfg-header {
 body.ni-dark div[id^="bfg-wrap-"] a {
 	background-color: transparent !important;
 	color: #a3c9ff !important;
+}
+
+/* == [NI 2026-10-13 v2.7.15] Menu lateral: melhorias de usabilidade (guia de sidebars) == */
+/* Sem mexer nos botões Light Side/Dark Side (bloco .ni-theme-toggle intocado). */
+
+/* 1. Pistas de interação: hover/focus visíveis em TODO item de menu
+      (antes: fundo transparente — nada indicava clicável) */
+.main-navigation a:hover,
+.main-navigation a:focus-visible {
+	background-color: rgba(51, 51, 51, 0.07);
+	border-radius: 4px;
+	outline: none;
+}
+.main-navigation a:focus-visible {
+	box-shadow: inset 0 0 0 2px rgba(51, 51, 51, 0.55);
+}
+.main-navigation a:active {
+	background-color: rgba(51, 51, 51, 0.12);
+}
+
+/* 2. Scroll independente: menu longo (97 itens) não corta mais no fold —
+      o painel de navegação rola sozinho dentro da sidebar (padrão de sidebar) */
+@media screen and (min-width: 59.6875em) {
+	.main-navigation .nav-menu,
+	.main-navigation ul.nav-menu {
+		max-height: calc(100vh - 220px);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-width: thin;
+		-webkit-overflow-scrolling: touch;
+	}
+}
+
+/* 3. Estado do submenu: indicador coerente — seta gira 45° quando aberto */
+.dropdown-toggle:after {
+	transition: transform 0.15s ease-in-out;
+}
+.menu-item-has-children.toggled-on > .dropdown-toggle:after {
+	transform: rotate(45deg); /* + do tema vira × quando aberto */
+}
+
+/* 4. Hierarquia visual dos submenus: guia lateral + peso menor */
+.main-navigation ul ul {
+	border-left: 2px solid rgba(51, 51, 51, 0.15);
+	margin-left: 0.6em;
+	padding-left: 0.4em;
+}
+.main-navigation ul ul a {
+	font-size: 14px;
+	font-size: 1.4rem;
+	padding: 0.55em 0;
+}
+
+/* 5. Dark mode: hover/foco com contraste invertido */
+body.ni-dark .main-navigation a:hover,
+body.ni-dark .main-navigation a:focus-visible {
+	background-color: rgba(255, 255, 255, 0.09);
+}
+body.ni-dark .main-navigation a:focus-visible {
+	box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.65);
+}
+body.ni-dark .main-navigation ul ul {
+	border-left-color: rgba(255, 255, 255, 0.22);
 }
 
 /* == [NI 2026-10-13 v2.7.11] Respiro do CTA no card + pistas de clique (guia de botões) == */
