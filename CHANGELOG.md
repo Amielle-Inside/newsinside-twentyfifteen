@@ -112,3 +112,19 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 ### Verificado
 - 9 slots auto-injetados, 2 renderizando 893×280 full-width, sem overflow, no light e
   no dark; anúncios permanecem visíveis com dark ativo.
+
+## Nota de ambiente — 13/10/2026 (PHP 8.3 → 8.5)
+### Hospedagem Locaweb atualizou o PHP para 8.5.7
+- **Efeito colateral:** dois avisos `Deprecated: ob_end_flush(): Producing output from
+  user output handler` estampavam `<br><b>Deprecated</b>` no INÍCIO do HTML de todas as
+  páginas públicas — emitidos pelos output handlers do WP Super Cache (`wp_cache_ob_callback`)
+  e Optimization Detective (`od_buffer_output`) no shutdown (PHP 8.5 deprecou
+  handlers que produzem output; ambos plugins já estão na última versão, sem fix upstream).
+- **Causa-raiz da visibilidade:** `WP_DEBUG` estava `true` **sem** `WP_DEBUG_DISPLAY`/`WP_DEBUG_LOG`
+  definidos → o wp-settings reativava display de erros DEPOIS de qualquer `ini_set` no wp-config.
+- **Fix (wp-config.php, fora do tema):** `WP_DEBUG_LOG = true` (erros vão para debug.log)
+  + `WP_DEBUG_DISPLAY = false`. Páginas públicas, feed, REST e resultados de busca agora
+  começam 100% limpos em `<!DOCTYPE html>`.
+- Residual conhecido: 1 deprecated no `/wp-login.php` (página de admin, sem impacto público/SEO).
+- Tema v2.7.8 compatível com PHP 8.5: nenhum uso de recursos removidos (testado: home,
+  single, archive, search, feed, widget REST — todos 200 sem warnings do tema).
