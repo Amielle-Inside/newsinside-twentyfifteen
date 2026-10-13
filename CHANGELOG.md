@@ -195,3 +195,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 - Quebra masthead→secondary: #masthead margin-bottom 12px (v2.6.5) vazava fundo
   rgb(20,20,20) entre os painéis no dark. Agora 0 (o border-bottom do site-header
   separa). Gap medido: 0px.
+
+## [2.7.18] / [2.7.19] - 2026-10-13
+### Corrigido
+- Quebras de cor da sidebar (light e dark): body::before (% do viewport) e .sidebar
+  (% do .site + max-width 300) dessincronizavam em telas >=1440px — conteúdo fora da
+  faixa, fundo da página vazando. MQ 87.6875em recalculada p/ geometria atual
+  (calc(50% - 401.5px)) e movida p/ o fim da cascata. Faixa == borda da sidebar em
+  1024/1280/1440/1600/1920 (sobra 0). v2.7.19 = cache-bust.
