@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.10
+Version: 2.7.12
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6200,6 +6200,41 @@ body.ni-dark div[id^="bfg-wrap-"] .bfg-header {
 body.ni-dark div[id^="bfg-wrap-"] a {
 	background-color: transparent !important;
 	color: #a3c9ff !important;
+}
+
+/* == [NI 2026-10-13 v2.7.11] Respiro do CTA no card + pistas de clique (guia de botões) == */
+/* O botão "Continuar lendo" terminava a 0px do rodapé do card. Regra de respiro:
+   margem externa mínima igual à margem lateral do excerpt (32px desktop / 28.8px mobile),
+   arredondada para múltiplos de 4px na escala do tema. */
+.entry-excerpt,
+.entry-summary {
+	margin-bottom: 0;
+	padding-bottom: 32px; /* respiro inferior regrado (desktop) */
+}
+
+/* alinhamento vertical do CTA com o texto (não flutuando/desconectado) */
+.entry-excerpt .ni-continue-reading,
+.entry-summary .ni-continue-reading,
+.ni-continue-reading {
+	display: block;
+	margin-top: 1.25em !important; /* separação clara do parágrafo acima (regra 8pt) */
+}
+
+/* Foco visível: quarta pista de clique (teclado e touch) */
+.ni-continue-reading .more-link:focus-visible,
+.entry-content > p > .more-link:focus-visible {
+	outline: 3px solid #8ab4f8;
+	outline-offset: 2px;
+}
+
+@media screen and (max-width: 59.6874em) {
+	.entry-excerpt,
+	.entry-summary {
+		padding-bottom: 24px; /* mobile: respiro menor, mesma regra */
+	}
+	.ni-continue-reading {
+		margin-top: 1em;
+	}
 }
 
 /* == [NI 2026-10-13 v2.7.9] Transição suave Light↔Dark + toggle mobile == */
