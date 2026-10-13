@@ -174,3 +174,14 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   todos os itens (antes invisíveis); scroll independente do painel no desktop
   (max-height calc(100vh-220px), overflow-y auto); seta do toggle girando 45° quando
   aberto; hierarquia de submenu com guia lateral + 14px; dark mode com hover invertido.
+
+## [2.7.16] - 2026-10-13
+### Adicionado
+- Sidebar no intervalo do guia (240-300px): 21.4286% + max-width 300px, grid float
+  compensado em par (site-content margin-left 21.4286% / width 78.5714%).
+  Medido: 216/271/300px em 1024/1280/1440+, cards 661-919px, sem overflow.
+- Seção ativa em destaque: current-menu-item/ancestor com fundo suave + bold 700
+  (+ variante dark), trilha pai+filho verificada na categoria PS5.
+### Não aplicados (guia de app, não de blog)
+- Troca de contas, sidebar secundária, resize arrastável, busca embutida,
+  ações inline, modo colapsado 48-64px.
