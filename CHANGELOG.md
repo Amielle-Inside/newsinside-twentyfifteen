@@ -82,3 +82,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   estado ativo com anel (box-shadow) em vez de preenchimento.
 - Botão Continuar Lendo no dark: azul → `#e6e6e6` com texto escuro (14.8:1);
   hover `#fff`. Light mode inalterado (`#333`/`#fff`).
+
+## [2.7.6] / [2.7.7] - 2026-10-13
+### Corrigido
+- Ícones Genericons no dark: `.dropdown-toggle` `#333→#e6e6e6` (invisível antes); hover invertido
+  (fundo claro, ícone escuro); metadados e navegações com cores legíveis; regra hover antiga removida.
+### Adicionado
+- Persistência Light/Dark Side: cookie `ni-theme` (1 ano) + localStorage; `functions.php` aplica
+  server-side → sem flash de tema errado. Verificado com reloads nos dois sentidos.
