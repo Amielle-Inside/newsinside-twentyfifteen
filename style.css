@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.13
+Version: 2.7.14
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6182,6 +6182,21 @@ p > video {
 	height: auto;
 	margin: 0;
 	border-radius: 4px;
+}
+
+/* [NI 2026-10-13 v2.7.14] Reserva de espaço da thumb ANTES do load (anti-CLS):
+   no Firefox Android, lazy + srcset/sizes=auto (Optimization Detective) causava
+   reflow pós-load — a imagem "caia" para depois do título com faixa de fundo
+   em cima (layout shift). aspect-ratio no wrapper + na img reserva a altura
+   exata (292/743) no primeiro paint, em qualquer motor. */
+.post-thumbnail {
+	aspect-ratio: 743 / 292;
+	overflow: hidden;
+	background: #fff; /* enquanto carrega, mostra branco do card, não o fundo da página */
+}
+.post-thumbnail img {
+	aspect-ratio: 743 / 292;
+	object-fit: cover;
 }
 /* [NI 2026-10-12 v2.6.5] Aproximar site-branding do #secondary: margin-bottom 74px (7.6923%) → 12px */
 #masthead {
