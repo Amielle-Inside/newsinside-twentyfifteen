@@ -146,3 +146,10 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 - Tipografia do botão "Continuar lendo": Noto Serif 16px (herdada do corpo) → **Noto Sans
   14px/700 uppercase** com letter-spacing 0.08em — mesma TTF dos demais botões do tema.
   Desktop 213×36px; mobile 320px quebra em 2 linhas sem overflow.
+
+## [2.7.11] / [2.7.12] - 2026-10-13
+### Corrigido
+- Botão "Continuar lendo" colado no rodapé do card (0px de respiro): agora
+  `.entry-excerpt`/`.entry-summary` têm padding-bottom 32px (desktop) / 24px (mobile);
+  CTA com margin-top 1.25em; foco visible com outline #8ab4f8 (4ª pista de clique).
+  Respiro final: 40px desktop / 32px mobile. v2.7.12 = cache-bust.
