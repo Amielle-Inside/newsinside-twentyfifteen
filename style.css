@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.17
+Version: 2.7.19
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -5950,8 +5950,10 @@ p > video {
 
 @media screen and (min-width: 87.6875em) {
 	body:before {
-		width: -webkit-calc(50% - 289px);
-		width: calc(50% - 289px);
+		/* [NI v2.7.18] Faixa alinhada a geometria atual: site max 1403 centrado,
+		   sidebar 300px: borda = 50%vw - 701.5 + 300 = calc(50% - 401.5px) */
+		width: -webkit-calc(50% - 401.5px);
+		width: calc(50% - 401.5px);
 	}
 }
 
@@ -6224,6 +6226,9 @@ body.ni-dark div[id^="bfg-wrap-"] a {
       (=300px no max-width do tema). Grid compensa: conteúdo ganha os px de volta. */
 @media screen and (min-width: 59.6875em) {
 	body:before {
+		/* [NI v2.7.18] NÃO limitar com max-width: a faixa é left:0 e precisa
+		   alcançar a borda DIREITA da sidebar (que desloca com o .site centrado
+		   em telas grandes). Em >=1403px a MQ 87.6875em assume com calc(). */
 		width: 21.4286%;
 	}
 	.sidebar {
@@ -6885,3 +6890,17 @@ body.ni-dark ::-webkit-scrollbar-thumb {
 }
 /* == fim NI DARK MODE == */
 /* == fim [NI] == */
+
+
+/* == [NI 2026-10-13 v2.7.18] Faixa da sidebar em telas grandes (FINAL DA CASCATA) ==
+   Em >=1403px o .site trava em 1403px centrado; a sidebar fica à esquerda dele
+   com 300px, terminando em: (vw-1403)/2 + 300 = 50%vw - 401.5px.
+   A faixa (::before, left:0 fixed) precisa dessa MESMA largura p/ cobrir a
+   coluna inteira — sem isso o conteúdo da sidebar "vaza" sobre o fundo da
+   página (a quebra de cor reportada no light e no dark). */
+@media screen and (min-width: 87.6875em) {
+	body:before {
+		width: -webkit-calc(50% - 401.5px);
+		width: calc(50% - 401.5px);
+	}
+}
