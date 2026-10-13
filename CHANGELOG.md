@@ -74,3 +74,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   plugin cobertos por seletor de atributo `div[id^="bfg-wrap-"]` + `!important`.
 - Auditoria automatizada de contraste: 0 problemas em home/archive/single.
 - Testes responsivos 320/375/768/1440/1920px: sem overflow ou cortes.
+
+## [2.7.5] - 2026-10-13
+### Alterado
+- Grafia do botão: "DarkSide" → "Dark Side".
+- Cores representativas: Light Side = fundo branco; Dark Side = fundo `#1a1a1a`;
+  estado ativo com anel (box-shadow) em vez de preenchimento.
+- Botão Continuar Lendo no dark: azul → `#e6e6e6` com texto escuro (14.8:1);
+  hover `#fff`. Light mode inalterado (`#333`/`#fff`).
