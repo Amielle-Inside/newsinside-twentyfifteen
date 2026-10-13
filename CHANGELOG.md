@@ -140,3 +140,9 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 ### Verificado
 - 375px: 125×44px por botão, visível sem scroll, sem overflow; 320px: 102×57px cliques OK;
   1280px: mesma posição; animação computada em 0.45s e removida após a troca.
+
+## [2.7.10] - 2026-10-13
+### Corrigido
+- Tipografia do botão "Continuar lendo": Noto Serif 16px (herdada do corpo) → **Noto Sans
+  14px/700 uppercase** com letter-spacing 0.08em — mesma TTF dos demais botões do tema.
+  Desktop 213×36px; mobile 320px quebra em 2 linhas sem overflow.
