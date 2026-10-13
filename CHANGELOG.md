@@ -51,3 +51,15 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 [2.6.3]: https://github.com/Amiell3/newsinside-twentyfifteen/releases/tag/v2.6.3
 [2.6.2]: https://github.com/Amiell3/newsinside-twentyfifteen/releases/tag/v2.6.2
 [2.6.1]: https://github.com/Amiell3/newsinside-twentyfifteen/releases/tag/v2.6.1
+
+
+## [2.7.1] - 2026-10-13
+### Corrigido
+- Dark mode nos containers de conteúdo: `.hentry` (card do post com título+resumo+thumb),
+  `.secondary`, `.site-header`, `.site-footer`, `.page-header`, `.page-content`,
+  `.comments-area`, `.post-navigation`, `.pagination` e `.widecolumn` agora escurecem
+  (`#1f1f1f`) — antes continuavam brancos por regras base do Twenty Fifteen (`#fff`).
+- Inputs em foco escuros com borda `#8ab4f8`; `mark`/`ins` em âmbar legível;
+  badge `.sticky-post` e botões de paginação/calendário invertidos.
+
+[2.7.1]: https://github.com/Amiell3/newsinside-twentyfifteen/releases/tag/v2.7.1
