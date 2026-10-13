@@ -1185,3 +1185,19 @@ function ni_fonts_display_swap($tag, $handle, $href, $media) {
 // 3) Remover scripts de emoji (render-blocking no head, dispensáveis)
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');
+
+
+// ==================================================================
+// [NI DARK MODE 2026-10-13] Classe body.ni-dark SOMENTE para admins
+// (preview privado do dark mode enquanto não liberamos pro público)
+// ==================================================================
+function ni_dark_mode_admin_preview( $classes ) {
+	// [NI 2026-10-13] Preview do dark mode: classe padrão para admins.
+	// A preferência salva em localStorage (seletor Light Side/DarkSide no header.php)
+	// sobrescreve no JS imediatamente após o load — aqui só garantimos o default dark.
+	if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
+		$classes[] = 'ni-dark';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'ni_dark_mode_admin_preview' );

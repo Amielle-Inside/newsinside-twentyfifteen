@@ -43,11 +43,40 @@
 					$description = get_bloginfo( 'description', 'display' );
 					if ( $description || is_customize_preview() ) :
 						?>
-						<p class="site-description"><?php echo $description; ?></p>
-						<?php
-					endif;
-					?>
-				<button class="secondary-toggle"><?php _e( 'Menu and widgets', 'twentyfifteen' ); ?></button>
+<p class="site-description"><?php echo $description; ?></p>
+					<?php
+					endif;
+					?>
+					<?php
+					// [NI 2026-10-13] Seletores Light Side / DarkSide — visíveis apenas para admins
+					// enquanto o dark mode está em preview privado.
+					if ( is_user_logged_in() && current_user_can( 'administrator' ) ) :
+						?>
+						<div class="ni-theme-toggle" role="group" aria-label="Escolher tema">
+							<button type="button" class="ni-side-btn ni-side-btn--light" data-ni-side="light">Light Side</button>
+							<button type="button" class="ni-side-btn ni-side-btn--dark" data-ni-side="dark">DarkSide</button>
+						</div>
+						<script>
+						(function() {
+							function niApply(side) {
+								document.body.classList.toggle('ni-dark', side === 'dark');
+								try { localStorage.setItem('ni-theme', side); } catch (e) {}
+							}
+							document.addEventListener('click', function(e) {
+								var btn = e.target.closest('.ni-side-btn');
+								if (!btn) return;
+								niApply(btn.getAttribute('data-ni-side'));
+							});
+							// Estado inicial: preferência salva; senão, escuro (preview padrão para admin)
+							var saved = null;
+							try { saved = localStorage.getItem('ni-theme'); } catch (e) {}
+							if (saved === 'light' || saved === 'dark') { niApply(saved); }
+						})();
+						</script>
+						<?php
+					endif;
+					?>
+					<button class="secondary-toggle"><?php _e( 'Menu and widgets', 'twentyfifteen' ); ?></button>
 			</div><!-- .site-branding -->
 		</header><!-- .site-header -->
 
