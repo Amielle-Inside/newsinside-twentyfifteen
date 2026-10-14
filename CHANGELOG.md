@@ -244,3 +244,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   44px, font 16px (iOS sem zoom), dark herdando o card #1f1f1f, placeholder
   "Busque no NewsInside" visível nos dois modos. Widget de busca da sidebar
   (block-18) removido via REST. 2.7.25 = cache-bust (margin 7.6%→8.3333%).
+
+## [2.7.26] - 2026-10-14
+### Adicionado
+- SEO sem plugin a partir do diagnóstico do Search Console: canonical nativo em
+  todas as views (URL limpa), noindex follow em tags <=2 posts e /page/2+,
+  post_tag removido do sitemap nativo; plugin Google Sitemap XML desativado e
+  sitemap.xml estático renomeado. Base: 871 URLs sem canônica, 5.502 tags (83%
+  thin), sitemap duplicado no robots.txt.
