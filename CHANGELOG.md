@@ -219,3 +219,10 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   Gecko misturava o canto com o bg do wrapper. Pixel bleed: img sangra 1px/lado
   (calc(100% + 2px), margin -1px), o overflow:hidden corta; cantos rasterizados
   são amostra pura da imagem. Validado no Gecko 1440 dark/light.
+
+## [2.7.22] - 2026-10-14
+### Adicionado
+- Easter egg Konami Code (desktop: teclado; mobile: 10 taps por zonas da tela)
+  toca o som "Fahh" (meme). MP3 de 50KB em assets/, baixado apenas no sucesso
+  do código — sem custo para visitantes comuns. Listeners passives (mobile não
+  bloqueia scroll); buffer com recovery em erro de sequência.
