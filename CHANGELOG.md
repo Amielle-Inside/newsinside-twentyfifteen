@@ -4,6 +4,12 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.28] - 2026-10-14
+### Alterado
+- Dark mode lançado ao público: hook sem checagem de login (dark padrão para
+  todos; cookie ni-theme=light vira a opção) + botões Light/Dark Side públicos
+  no header.php. Antes era preview privado de admin desde a v2.7.0.
+
 ## [2.7.27] - 2026-10-14
 ### Corrigido
 - CLS mobile 0.11 → 0: Auto Ads do Google empurravam #content no load (shift
