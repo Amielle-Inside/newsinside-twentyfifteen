@@ -252,3 +252,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   post_tag removido do sitemap nativo; plugin Google Sitemap XML desativado e
   sitemap.xml estático renomeado. Base: 871 URLs sem canônica, 5.502 tags (83%
   thin), sitemap duplicado no robots.txt.
+
+## [2.7.27] - 2026-10-14
+### Corrigido
+- CLS mobile 0.11 → 0: Auto Ads do Google empurravam #content no load (shift
+  0.078); min-height 120px no .google-auto-placed. Recheck CWV: LCP 576ms
+  desktop / 852ms mobile, CLS 0.000, 0 scripts no head, HTML 28KB gzip.
+- /sitemap.xml (soft-404 pós-rename) agora 301 → /wp-sitemap.xml via .htaccess
+  (bloco no TOPO — depois do bloco WordPress a regra deles captura antes).
