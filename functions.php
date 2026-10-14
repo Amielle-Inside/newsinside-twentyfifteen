@@ -1287,3 +1287,148 @@ function ni_konami_fahh() {
 	<?php
 }
 add_action('wp_footer', 'ni_konami_fahh');
+
+
+/* ============================================================
+ * [NI 2026-10-14 v2.7.23] Rolagem infinita (CWV-safe) na home/arquivos
+ * ============================================================
+ * - Vanilla JS (~2.5KB inline no footer = zero render-blocking)
+ * - REST API nativa (/wp/v2/posts?page=N) — sem admin-ajax, sem jQuery
+ * - IntersectionObserver (rootMargin 600px) — carrega ANTES do usuário
+ *   bater no fim; nenhum handler de scroll (INP intacto)
+ * - Cards apensados ABAIXO do conteúdo (zero CLS); imagens novas com
+ *   loading=lazy + aspect-ratio reservado pelo CSS (anti-CLS v2.7.14+)
+ * - Paginação clássica permanece no HTML: crawlers/no-JS navegam normal
+ *   (SEO intacto) — só é escondida quando o JS está ativo
+ * - Para no fim via cabeçalho X-WP-TotalPages
+ * ============================================================ */
+function ni_infinite_scroll() {
+	// Só na home/blog/arquivos (loop de lista), não em single/página
+	if ( ! ( is_home() || is_archive() || is_search() ) ) {
+		return;
+	}
+	// Não ativa se o loop está vazio
+	global $wp_query;
+	if ( ! $wp_query || $wp_query->max_num_pages < 2 ) {
+		return;
+	}
+	$total = (int) $wp_query->max_num_pages;
+	$rest  = esc_url_raw( rest_url( 'wp/v2/posts' ) );
+	?>
+	<script>
+	(function () {
+		'use strict';
+		var main = document.querySelector('.site-main');
+		if (!main) return;
+		var paginacao = main.querySelector('.pagination, .nav-links');
+		if (paginacao) paginacao.style.display = 'none'; /* JS ativo: esconde; no-JS/crawler vê normal */
+
+		var TOTAL = <?php echo (int) $total; ?>;
+		var REST  = <?php echo json_encode($rest); ?>;
+		var page  = 1;
+		var carregando = false;
+		var fim = page >= TOTAL;
+
+		/* Sentinela */
+		var sentinela = document.createElement('div');
+		sentinela.id = 'ni-inf-sentinel';
+		sentinela.setAttribute('aria-hidden', 'true');
+		sentinela.style.cssText = 'height:1px;overflow:hidden';
+		main.appendChild(sentinela);
+
+		var status = document.createElement('p');
+		status.id = 'ni-inf-status';
+		status.style.cssText = 'text-align:center;color:inherit;margin:1em 0;font-size:0.85em;height:1.4em';
+		status.textContent = '';
+		main.appendChild(status);
+
+		function esc(s) {
+			return String(s).replace(/[&<>"']/g, function (c) {
+				return { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;', "'": '&#39;' }[c];
+			});
+		}
+
+		/* title.rendered vem com entidades HTML (&#8211;) — usar como está
+		   (não re-escapar), só extrair texto puro para o atributo aria */
+		function texto(s) {
+			var d = document.createElement('div');
+			d.innerHTML = s;
+			return (d.textContent || '').trim();
+		}
+
+		function card(p) {
+			var img = '';
+			var media = p._embedded && p._embedded['wp:featuredmedia'];
+			if (media && media[0]) {
+				var m0 = media[0];
+				var sizes = (m0.media_details && m0.media_details.sizes) ? m0.media_details.sizes : null;
+				var s = null;
+				if (sizes) s = sizes['post-thumbnail'] || sizes.large || sizes.full;
+				if (!s && m0.source_url) s = { source_url: m0.source_url, width: m0.media_details ? m0.media_details.width : 743, height: m0.media_details ? m0.media_details.height : 292 };
+				if (s && s.source_url) {
+					var alt = esc(texto(m0.alt_text || p.title.rendered));
+					img = '<a class="post-thumbnail" href="' + esc(p.link) + '" aria-hidden="true">' +
+						'<img width="' + (s.width || 743) + '" height="' + (s.height || 292) + '" ' +
+						'src="' + esc(s.source_url) + '" ' +
+						'alt="' + alt + '" decoding="async" loading="lazy" ' +
+						'class="attachment-post-thumbnail size-post-thumbnail wp-post-image" /></a>';
+				}
+			}
+			var titulo = p.title.rendered; /* entidades já corretas */
+			var exc = p.excerpt.rendered;  /* já vem <p>…</p>, sanitizado server-side */
+			return '<article id="post-' + p.id + '" class="post type-post format-standard has-post-thumbnail hentry">' +
+				img +
+				'<header class="entry-header"><h1 class="entry-title"> <a href="' + esc(p.link) + '">' + titulo + '</a></h1></header>' +
+				'<div class="entry-excerpt">' + exc +
+				'<p class="ni-continue-reading"><a class="more-link" href="' + esc(p.link) + '" rel="bookmark">Continuar lendo <span class="screen-reader-text">' + titulo + '</span><span aria-hidden="true">&rarr;</span></a></p>' +
+				'</div></article>';
+		}
+
+		function carregar() {
+			if (carregando || fim) return;
+			carregando = true;
+			status.textContent = 'Carregando…';
+			fetch(REST + '?page=' + (page + 1) + '&per_page=10&_embed=wp:featuredmedia&_fields=id,link,title,excerpt,_links,_embedded.wp:featuredmedia', { credentials: 'same-origin' })
+				.then(function (r) {
+					if (!r.ok) throw 0;
+					page++;
+					if (page >= TOTAL) fim = true;
+					return r.json();
+				})
+				.then(function (posts) {
+					var html = '';
+					for (var i = 0; i < posts.length; i++) html += card(posts[i]);
+					if (html) {
+						sentinela.insertAdjacentHTML('beforebegin', html);
+						/* dispara lazy-load do que entrou no viewport */
+						if (window.odProfileLoaded) window.odProfileLoaded();
+					}
+					carregando = false;
+					status.textContent = fim ? 'Fim da lista ✓' : '';
+				})
+				.catch(function () {
+					fim = true;
+					carregando = false;
+					status.textContent = '';
+					if (paginacao) paginacao.style.display = ''; /* falha: volta a paginação */
+				});
+		}
+
+		if ('IntersectionObserver' in window) {
+			var io = new IntersectionObserver(function (entries) {
+				if (entries[0].isIntersecting) carregar();
+			}, { rootMargin: '900px 0px' });
+			io.observe(sentinela);
+		} else {
+			/* Fallback: link manual (acessível) */
+			var btn = document.createElement('button');
+			btn.textContent = 'Carregar mais';
+			btn.style.cssText = 'display:block;margin:1em auto;padding:.5em 1em;cursor:pointer';
+			btn.addEventListener('click', carregar);
+			main.appendChild(btn);
+		}
+	})();
+	</script>
+	<?php
+}
+add_action('wp_footer', 'ni_infinite_scroll');
