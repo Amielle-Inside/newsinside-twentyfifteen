@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.25
+Version: 2.7.27
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -7013,4 +7013,14 @@ body.ni-dark .ni-search-submit:focus-visible {
 	.ni-search-form {
 		margin: 0 0 1.75em;
 	}
+}
+
+
+/* == [NI v2.7.27] CLS fix: reservar espaço para Auto Ads do Google ==
+   Diagnóstico do recheck CWV: shift 0.078 no load inicial (mobile) vindo de
+   div.google-auto-placed (altura 0 no load; ao preencher, empurra #content).
+   min-height 120px absorve a expansão típica sem deixar buraco grande quando
+   o ad não preenche. */
+.google-auto-placed {
+	min-height: 120px;
 }
