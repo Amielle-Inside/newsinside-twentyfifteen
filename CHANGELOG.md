@@ -226,3 +226,13 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   toca o som "Fahh" (meme). MP3 de 50KB em assets/, baixado apenas no sucesso
   do código — sem custo para visitantes comuns. Listeners passives (mobile não
   bloqueia scroll); buffer com recovery em erro de sequência.
+
+## [2.7.23] - 2026-10-14
+### Adicionado
+- Rolagem infinita CWV-safe (home/arquivos/busca): vanilla JS ~4.5KB inline no
+  footer, REST nativa (46KB/10 posts), IntersectionObserver rootMargin 900px, zero
+  handlers de scroll. CLS 0.000 medido com rolagem humana; LCP inalterado (656ms,
+  primeiro card server-side); paginação clássica preservada no HTML (SEO/no-JS) e
+  restaurada em erro de fetch; imagens lazy + aspect-ratio + pixel bleed.
+  Pitfall descoberto: _fields sem o caminho aninhado _embedded.wp:featuredmedia
+  corta o _embed inteiro da resposta REST.
