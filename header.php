@@ -50,9 +50,9 @@
 					endif;
 					?>
 					<?php
-					// [NI 2026-10-13] Seletores Light Side / DarkSide — visíveis apenas para admins
-					// enquanto o dark mode está em preview privado.
-					if ( is_user_logged_in() && current_user_can( 'administrator' ) ) :
+					// [NI v2.7.28] Seletores Light Side / Dark Side — públicos
+					// (antes: apenas admins, durante o preview privado do dark mode)
+					if ( true ) :
 						?>
 						<div class="ni-theme-toggle" role="group" aria-label="Escolher tema">
 							<button type="button" class="ni-side-btn ni-side-btn--light" data-ni-side="light">Light Side</button>

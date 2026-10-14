@@ -1196,11 +1196,12 @@ function ni_dark_mode_admin_preview( $classes ) {
 	// Preferência persistida em cookie 'ni-theme' (gravado pelo seletor Light Side/Dark Side):
 	// - 'light' → admin escolheu Light Side: SEM a classe (sem flash de tema errado)
 	// - 'dark' ou ausente → dark (padrão do preview)
-	if ( is_user_logged_in() && current_user_can( 'administrator' ) ) {
-		$side = isset( $_COOKIE['ni-theme'] ) ? sanitize_key( wp_unslash( $_COOKIE['ni-theme'] ) ) : '';
-		if ( 'light' !== $side ) {
-			$classes[] = 'ni-dark';
-		}
+	// [NI v2.7.28] Lançamento público do dark mode: DARK é o padrão para
+	// TODOS os visitantes; 'light' (cookie ni-theme) é a opção escolhida.
+	// Antes: preview privado (apenas administradores logados).
+	$side = isset( $_COOKIE['ni-theme'] ) ? sanitize_key( wp_unslash( $_COOKIE['ni-theme'] ) ) : '';
+	if ( 'light' !== $side ) {
+		$classes[] = 'ni-dark';
 	}
 	return $classes;
 }
