@@ -236,3 +236,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   restaurada em erro de fetch; imagens lazy + aspect-ratio + pixel bleed.
   Pitfall descoberto: _fields sem o caminho aninhado _embedded.wp:featuredmedia
   corta o _embed inteiro da resposta REST.
+
+## [2.7.24] / [2.7.25] - 2026-10-14
+### Adicionado
+- Campo de busca na home, acima da 1ª thumb: searchform.php novo no tema (canônico
+  WP), CSS com margin 8.3333% idêntica aos .hentry (medido ao pixel), min-height
+  44px, font 16px (iOS sem zoom), dark herdando o card #1f1f1f, placeholder
+  "Busque no NewsInside" visível nos dois modos. Widget de busca da sidebar
+  (block-18) removido via REST. 2.7.25 = cache-bust (margin 7.6%→8.3333%).
