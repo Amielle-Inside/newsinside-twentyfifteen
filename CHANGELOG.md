@@ -211,3 +211,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   opostas, expondo o background #fff. Img agora preenche o wrapper exato
   (height/width 100% + object-fit cover + display block; wrapper line-height 0);
   dark com background #1f1f1f no wrapper. Gap 0 medido em Chromium e Gecko.
+
+## [2.7.21] - 2026-10-14
+### Corrigido
+- Fresta residual de antialias nos cantos das thumbs (2º reporte): o gap 0.00 da
+  v2.7.20 não cobria a 1ª linha PARCIAL da img em tops fracionários (91.85px) — o
+  Gecko misturava o canto com o bg do wrapper. Pixel bleed: img sangra 1px/lado
+  (calc(100% + 2px), margin -1px), o overflow:hidden corta; cantos rasterizados
+  são amostra pura da imagem. Validado no Gecko 1440 dark/light.
