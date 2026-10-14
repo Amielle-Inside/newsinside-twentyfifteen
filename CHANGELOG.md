@@ -203,3 +203,11 @@ versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
   faixa, fundo da página vazando. MQ 87.6875em recalculada p/ geometria atual
   (calc(50% - 401.5px)) e movida p/ o fim da cascata. Faixa == borda da sidebar em
   1024/1280/1440/1600/1920 (sobra 0). v2.7.19 = cache-bust.
+
+## [2.7.20] - 2026-10-14
+### Corrigido
+- Fresta branca de 1-2px nos cantos das thumbs (visível no dark): wrapper e img
+  tinham aspect-ratio 743/292 independentes e arredondavam alturas em direções
+  opostas, expondo o background #fff. Img agora preenche o wrapper exato
+  (height/width 100% + object-fit cover + display block; wrapper line-height 0);
+  dark com background #1f1f1f no wrapper. Gap 0 medido em Chromium e Gecko.
