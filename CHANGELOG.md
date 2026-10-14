@@ -4,6 +4,15 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.29] - 2026-10-14
+### Alterado
+- Auditoria Query Monitor: jquery-migrate removido do front (alias jquery sem a
+  dependência; admin mantém). Correlatas fora do tema: títulos de menu 26222/30473
+  com <center> malformado → texto plano (mata os 8 notices do Tag Processor);
+  option powerpress_feed_podcast regenerada (length serializado s:41→s:45, warning
+  unserialize); Yandex Metrika desativado (doing_it_wrong + JS no front). PHP
+  errors 10 → 1 (resta o deprecated upstream do google-site-kit 1.189).
+
 ## [2.7.28] - 2026-10-14
 ### Alterado
 - Dark mode lançado ao público: hook sem checagem de login (dark padrão para
