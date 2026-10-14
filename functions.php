@@ -1205,3 +1205,85 @@ function ni_dark_mode_admin_preview( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'ni_dark_mode_admin_preview' );
+
+
+/* ============================================================
+ * [NI 2026-10-14] Easter egg — Konami Code → som "Fahh" (meme)
+ * ============================================================
+ * Desktop: ↑ ↑ ↓ ↓ ← → ← → B A (teclado)
+ * Mobile: 10 toques na tela na mesma sequência:
+ *   ↑↑↓↓ = toques no TERÇO superior
+ *   ←→←→ = toques nas METADES esquerda/direita do terço central
+ *   BA   = 2 toques no terço inferior
+ * O áudio (50KB, assets/fahh-meme.mp3) só é baixado quando o código
+ * é completado — zero custo para visitantes comuns. Sem bibliotecas.
+ * ============================================================ */
+function ni_konami_fahh() {
+	// sequência canônica em keyCodes + variantes de setas (e.key)
+	$seq = array(
+		'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+		'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+		'b', 'a',
+	);
+	$js = json_encode($seq);
+	$mp3 = get_template_directory_uri() . '/assets/fahh-meme.mp3';
+	?>
+	<script>
+	(function () {
+		'use strict';
+		var KONAMI = <?php echo $js; ?>;
+		var MP3 = <?php echo json_encode($mp3); ?>;
+
+		var pos = 0;
+		var audio = null;
+
+		function fahh() {
+			if (audio) { audio.currentTime = 0; audio.play(); return; }
+			audio = new Audio(MP3);
+			audio.play();
+		}
+
+		function register(symbol) {
+			if (KONAMI[pos] === symbol) {
+				pos++;
+				if (pos === KONAMI.length) {
+					pos = 0;
+					fahh();
+				}
+			} else {
+				// símbolo errado: reinicia (ou continua se o atual casa com o 1º)
+				pos = (KONAMI[0] === symbol) ? 1 : 0;
+			}
+		}
+
+		/* ---- Desktop: teclado (keydown) ---- */
+		document.addEventListener('keydown', function (e) {
+			var k = e.key;
+			if (k === 'ArrowUp' || k === 'ArrowDown' || k === 'ArrowLeft' || k === 'ArrowRight') {
+				register(k);
+			} else if (k.length === 1) {
+				register(k.toLowerCase());
+			}
+		}, { passive: true });
+
+		/* ---- Mobile: 10 taps por zonas (touchstart, sem bloquear scroll) ---- */
+		document.addEventListener('touchstart', function (e) {
+			if (e.touches.length !== 1) { pos = 0; return; }
+			var t = e.touches[0];
+			var w = window.innerWidth;
+			var h = window.innerHeight;
+			var zone;
+			if (t.clientY < h / 3) {
+				zone = 'ArrowUp';                    // terço superior
+			} else if (t.clientY > (2 * h) / 3) {
+				zone = (KONAMI[pos] === 'b' || KONAMI[pos] === 'a') ? KONAMI[pos] : 'ArrowDown'; // terço inferior: B/A em sequência
+			} else {
+				zone = t.clientX < w / 2 ? 'ArrowLeft' : 'ArrowRight'; // terço central: metades
+			}
+			register(zone);
+		}, { passive: true });
+	})();
+	</script>
+	<?php
+}
+add_action('wp_footer', 'ni_konami_fahh');
