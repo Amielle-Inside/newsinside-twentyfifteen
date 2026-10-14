@@ -1,94 +1,68 @@
 # NewsInside Twenty Fifteen+ (`twentyfifteen-more`)
 
-Fork privado do tema **Twenty Fifteen** para o site [NewsInside.org](https://www.newsinside.org/).
-Este repositório espelha o tema ativo em produção (WordPress 7.1.3 / PHP 8.3) e serve como
-controle de versão das customizações feitas pela equipe do NewsInside com o Hermes Agent.
+Fork público do tema **[Twenty Fifteen](https://wordpress.org/themes/twentyfifteen/)** — o tema default de 2015 do WordPress — mantido para o site [NewsInside.org](https://www.newsinside.org/).
 
-## Fontes originais (créditos do fork)
+Este repositório espelha o tema ativo em produção (WordPress 7.1.3 / PHP 8.5.7) e é o controle de versões das customizações do NewsInside.
+
+> ⚠️ **Tema em produção:** este código roda no site real do NewsInside. Instale por sua conta; testes de compatibilidade foram feitos apenas no ambiente de produção dele.
+
+## 🤖 Desenvolvido com assistência de agentes de IA
+
+Todas as edições e melhorias deste fork (a partir da v2.6.1, 12/10/2026) foram implementadas com o uso de **agentes de IA**:
+
+- **Agente:** [Hermes Agent](https://hermes-agent.nousresearch.com/) (Nous Research)
+- **Modelo:** `z-ai/glm-5.3` (via provider NVIDIA)
+- **Automação:** diagnóstico em browser real (pixel a pixel), edição via FTP, versionamento git + GitHub releases, testes em Chromium e Gecko/Firefox (desktop e mobile emulado), medições Core Web Vitals via PerformanceObserver
+- **Supervisão humana:** todas as mudanças foram revisadas visualmente pela equipe do NewsInside após cada release; regressões reportadas foram corrigidas nos releases seguintes
+
+## Tema original (créditos do fork)
 
 - **Tema base:** [Twenty Fifteen](https://wordpress.org/themes/twentyfifteen/) — WordPress.org / WordPress Team
-- **Repositório upstream:** https://github.com/WordPress/twentyfifteen
-- **Licença:** GNU General Public License v2 ou posterior (GPL-2.0-or-later)
-- O tema base é distribuído com o WordPress e todos os direitos autorais do trabalho original
-  pertencem à equipe do WordPress. Este fork mantém a licença GPL-2.0+ e o cabeçalho de créditos
-  em `style.css`.
-- **Fork intermediário:** o site já usava uma cópia renomeada e customizada de Twenty Fifteen
-  (`1a1a1a1aa1amido/twentyfifteen`, alterações de jan/2025 — loop inline na home com excerpts,
-  sidebar 413px, customizações visuais). Este fork (`twentyfifteen-more`) deriva DIRETAMENTE
-  dessa cópia, herdando todas as suas customizações, e adiciona as modificações listadas abaixo.
+- **Código-fonte oficial (SVN):** https://themes.trac.wordpress.org/browser/twentyfifteen — o Twenty Fifteen (2015) **não possui repositório GitHub próprio na org [WordPress](https://github.com/WordPress)** (o espelho oficial deles no GitHub começa no Twenty Sixteen); por isso este é um **repositório próprio**, creditando e linkando a fonte oficial
+- **Licença:** GNU General Public License v2 ou posterior (**GPL-2.0-or-later**) — este fork mantém integralmente a licença, os cabeçalhos de crédito em `style.css` e o `readme.txt` original
+- Todos os direitos autorais do trabalho original pertencem à equipe do WordPress
 
-## Modificações feitas neste fork (desde a derivação, 12-13/10/2026)
+## Destaques deste fork
 
-### v2.6.1 — 12/10/2026
-**Derivação do fork + botão "Continuar lendo" em todos os posts das listagens**
+| Recurso | Desde | Detalhe |
+|---|---|---|
+| 🌙 **Dark mode completo** | v2.7.0+ | Paleta própria, persistência via cookie (sem flash de tema errado), contraste WCAG AA/AAA, transições suaves, `prefers-reduced-motion` respeitado |
+| 📖 **Botão "Continuar lendo"** | v2.6.1+ | Em todos os posts das listagens (home, arquivos, busca), tipografia da UI do tema |
+| 🏎️ **Rolagem infinita CWV-safe** | v2.7.23 | Vanilla JS 4,5KB, REST nativa, IntersectionObserver — CLS 0.000 medido, zero handlers de scroll; paginação clássica preservada para SEO/no-JS |
+| 🔍 **Busca acima da 1ª thumb** | v2.7.24/25 | Alinhada ao pixel com os cards, 44px de alvo de toque, sem zoom-força no iOS |
+| 📈 **SEO sem plugin** | v2.7.26 | Canonical nativo em todas as views, `noindex` cirúrgico (tags ≤2 posts, `/page/2+`), sitemap único |
+| 🖼️ **Thumbs anti-CLS + pixel bleed** | v2.7.14/20/21 | Espaço reservado antes do load e cantos rasterizados sem fresta (validado em Chromium e Gecko) |
+| 🎮 **Easter egg: Konami Code** | v2.7.22 | `↑↑↓↓←→←→BA` (desktop) ou 10 taps (mobile) toca o meme "Fahh" — 50KB baixados só no sucesso |
+| 🎯 **Compatibilidade AdSense dark** | v2.7.8/27 | `color-scheme` por tema, slots contidos, CLS 0.11 → 0.000 |
 
-O Twenty Fifteen original só mostra o link "continue reading" quando o post usa a tag
-`<!--more-->` ou possui resumo manual. A home do NewsInside não usava `content.php`
-(loop inline customizado em `index.php`), então os posts apareciam SEM botão algum.
+## Core Web Vitals (medições reais, 14/10/2026)
 
-- **`index.php`** — injetado bloco `p.ni-continue-reading > a.more-link` após `the_excerpt()`
-  no loop inline da home; todos os posts da home passam a exibir o botão.
-- **`content.php`** — em listagens (não-single): posts com more/excerpt usam `the_content()`
-  com more-link; posts sem resumo usam `the_excerpt()` + bloco `ni-continue-reading`.
-  Em single, comportamento original preservado.
-- **`content-search.php`** — adicionado bloco `ni-continue-reading` após `the_excerpt()`
-  nos resultados de busca (corrigido depois bug de `endif;` sem fechamento `?>`).
-- **`style.css`** — header renomeado para "NewsInside Twenty Fifteen+", bloco `[NI 2026-10-12]`
-  com estilo do botão (pill escuro, hover, foco, seta `→`).
+- **LCP:** 576 ms desktop · 852 ms mobile — **CLS:** 0.000 nos dois — **INP:** sem handlers de scroll
+- **TTFB:** 193 ms (cache) · HTML 28 KB gzip · **0 scripts render-blocking no `<head>`**
 
-### v2.6.2 — 12/10/2026
-**Botão redimensionado à escala tipográfica do tema (v2 do CSS)**
+## Estrutura das modificações
 
-- **`style.css`** — padding/font-size aumentados; sombra e transição de hover adicionadas.
-- **`functions.php`** — versão do enqueue do CSS trocada de hardcoded `'20190507'` para
-  `wp_get_theme()->get('Version')`: cache-bust automático a cada bump de versão.
+Os patches NI ("NewsInside") vivem nos arquivos, marcados com comentários datados `[NI v2.7.x]`:
 
-### v2.6.3 — 12/10/2026
-**Botão com o tamanho CORRETO na escala rem do tema**
+- `style.css` — header do tema + blocos `[NI ...]` no fim (todas as features visuais/dark)
+- `functions.php` — hooks: dark-mode server-side, rolagem infinita, Konami, canonical/noindex, sitemap
+- `searchform.php` — busca customizada (novo arquivo)
+- `index.php`, `content.php`, `content-search.php` — CTA "Continuar lendo" nas listagens
+- `header.php` — meta `color-scheme`, tema claro/escuro
+- `assets/fahh-meme.mp3` — som do easter egg
+- `inc/`, `js/`, `css/`, `genericons/` — intocados do original
 
-- **`style.css`** — descoberto que Twenty Fifteen usa `html { font-size: 62.5% }` (1rem=10px).
-  Botão recalibrado: container `1.6rem` (16px), botão `font-size: inherit`, padding
-  `0.55em 1.1em`; media queries `0.9rem` originais removidas. Resultado renderizado:
-  195x42px (antes 133x28px com fonte de 9-10px).
+## Histórico de versões
 
-### v2.6.4 — 12/10/2026
-**Thumbnails full-width (fim do letterbox)**
+Ver **[CHANGELOG.md](CHANGELOG.md)** — todas as versões (v2.6.1 → v2.7.27) com detalhes, causas raiz e verificações.
+Releases com notas completas: https://github.com/Amielle-Inside/newsinside-twentyfifteen/releases
 
-- **`style.css`** — `.post-thumbnail img { width: 100%; height: auto; }` + border-radius:
-  imagens destacadas passam a preencher a largura total do post, eliminando as faixas
-  brancas laterais (letterbox) do CSS original `margin: 0 auto`.
+## Como usar
 
-### v2.6.5 — 12/10/2026
-**Aproximação do cabeçalho da sidebar**
-
-- **`style.css`** — `#masthead { margin-bottom: 12px; }` (antes `7.6923%` ≈ 74px):
-  gap entre `.site-branding` e `#secondary` reduzido de 74px para 12px.
-
-### v2.7.0 — 13/10/2026
-**Dark mode (preview privado — somente administradores)**
-
-- **`style.css`** — bloco `[NI DARK MODE v2.7.0]`: paleta escura completa (fundo `#141414`,
-  painéis `#1f1f1f`, texto `#e6e6e6`, links `#8ab4f8`, metadados `#b8b8b8`), estilização
-  de formulários, busca, blockquote, código, tabelas, scrollbar, `::selection`; botão
-  Continuar Lendo invertido (azul com texto escuro); logo com `brightness(1.15)`.
-  Contraste WCAG verificado: corpo 14.8:1, títulos 16.2:1, metadados 9.3:1, links 8.7:1.
-- **`functions.php`** — hook `ni_dark_mode_admin_preview` no filtro `body_class`: classe
-  `ni-dark` adicionada ao `<body>` **somente para usuários admin logados** — preview
-  privado enquanto o dark mode não é liberado ao público.
-
-## Estrutura
-
-- `style.css` — tema completo (CSS inline + header WP + blocos `[NI]` customizados)
-- `functions.php` — setup do tema + fixes Core Web Vitals `[NI 2026-10-12]` + hooks `[NI]`
-- `index.php` / `archive.php` / `search.php` / `content*.php` — templates de listagem
-- demais arquivos herdados do Twenty Fifteen original sem modificação
-
-## Como o tema chega à produção
-
-1. Edição direta via FTP (Locaweb) em `/public_html/wp-content/themes/1a1a1a1aa1amido/twentyfifteen-more/`
-2. Verificação ao vivo (público + admin logado)
-3. Commit neste repositório com changelog documentado
+1. Baixe o [release mais recente](https://github.com/Amielle-Inside/newsinside-twentyfifteen/releases/latest) (zip do código-fonte)
+2. No WordPress: `Aparência → Temas → Adicionar novo → Enviar tema` (ou extraia em `wp-content/themes/twentyfifteen-more/`)
+3. Ative. As features NI são automáticas; o dark mode ativa pelo seletor **Light/Dark Side** quando logado como admin (preview) — para liberá-lo a todos, remova a checagem `is_user_logged_in()`/`current_user_can('administrator')` no hook `ni_dark_mode_admin_preview` do `functions.php`
 
 ## Licença
 
-GPL-2.0-or-later (herdada do Twenty Fifteen / WordPress).
+**GPL-2.0-or-later** — herdada integralmente do Twenty Fifteen. Use, estude, modifique e compartilhe. Os arquivos originais da WordPress Foundation mantêm seus créditos: http://www.gnu.org/licenses/gpl-2.0.html
