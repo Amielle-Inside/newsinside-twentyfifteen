@@ -42,6 +42,16 @@ get_header(); ?>
 
 		<?php if ( have_posts() ) : ?>
 
+			<?php
+			// [NI v2.7.24] Campo de busca acima da lista (largura das thumbs,
+			// mesmas margins — vive dentro de .site-main)
+			if ( is_home() || is_front_page() ) :
+				get_search_form();
+			endif;
+			?>
+
+
+
 
 
 			<?php if ( is_home() && ! is_front_page() ) : ?>
