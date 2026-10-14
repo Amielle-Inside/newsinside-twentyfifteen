@@ -1492,3 +1492,22 @@ add_filter( 'wp_sitemaps_taxonomies', function ( $taxonomies ) {
 	unset( $taxonomies['post_tag'] );
 	return $taxonomies;
 } );
+
+
+/* ============================================================
+ * [NI v2.7.28b] Remover jquery-migrate do front-end (QM: peso legado)
+ * O alias 'jquery' carrega core + migrate; o migrate só existe para
+ * compatibilidade com APIs pré-jQuery-3. Nada no front usa (auditado
+ * via Query Monitor: twentyfifteen-script e wptelegram usam APIs
+ * modernas). Admin/wp-admin continua COM migrate (padrão de mercado).
+ * ============================================================ */
+add_action( 'wp_default_scripts', function ( $scripts ) {
+	if ( is_admin() ) {
+		return;
+	}
+	$scripts->remove( 'jquery-migrate' );
+	$jquery = $scripts->query( 'jquery' );
+	if ( $jquery ) {
+		$jquery->deps = array_diff( $jquery->deps, array( 'jquery-migrate' ) );
+	}
+} );
