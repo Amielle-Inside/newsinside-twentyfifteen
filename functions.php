@@ -1432,3 +1432,62 @@ function ni_infinite_scroll() {
 	<?php
 }
 add_action('wp_footer', 'ni_infinite_scroll');
+
+
+/* ============================================================
+ * [NI 2026-10-14 v2.7.26] SEO: canonical + noindex (Search Console fix)
+ * ============================================================
+ * Diagnóstico Search Console (out/2026): 871 "Cópia sem página canônica",
+ * 3.319 "Detectada mas não indexada", 1.716 "Rastreada mas não indexada" —
+ * causa raiz: site SEM plugin de SEO desde a remoção do Yoast = zero
+ * canonicals; 5.502 tags no sitemap (83% com <=2 posts = thin content);
+ * sitemap DUPLICADO (plugin Google Sitemap XML + nativo wp-sitemap.xml).
+ *
+ * Fix (sem plugin):
+ * 1. Canonical em todas as views (single, página, archive, home, busca com
+ *    query, paginação numerada no canonical da própria página)
+ * 2. noindex nas TAGS com <=2 posts (thin) e na PAGINAÇÃO /page/2+
+ * 3. Tags FORA do sitemap nativo (wp-sitemap-posts continua; taxonomies de
+ *    tag removidas — categorias permanecem)
+ * ============================================================ */
+
+/* --- 1) Canonical robusto --- */
+function ni_rel_canonical() {
+	if ( is_singular() ) {
+		$url = get_permalink();
+	} elseif ( is_search() ) {
+		return; /* busca: sem canonical (URLs efêmeras) */
+	} else {
+		/* URL limpa: path atual SEM query strings (elimina ?utm, ?cb, etc.) */
+		$path = wp_parse_url( home_url( add_query_arg( array() ) ), PHP_URL_PATH );
+		$url  = home_url( $path );
+	}
+	if ( ! empty( $url ) ) {
+		printf( '<link rel="canonical" href="%s">' . "\n", esc_url( $url ) );
+	}
+}
+add_action( 'wp_head', 'ni_rel_canonical', 5 );
+
+/* --- 2) noindex: tags fracas + paginação --- */
+function ni_robots_noindex() {
+	$noindex = false;
+	if ( is_tag() ) {
+		$tag = get_queried_object();
+		if ( $tag && $tag->count <= 2 ) {
+			$noindex = true; /* tag com <=2 posts = thin content */
+		}
+	}
+	if ( is_paged() && ! is_singular() ) {
+		$noindex = true; /* /page/2+: conteúdo duplicado da listagem */
+	}
+	if ( $noindex ) {
+		echo '<meta name="robots" content="noindex, follow">' . "\n";
+	}
+}
+add_action( 'wp_head', 'ni_robots_noindex', 6 );
+
+/* --- 3) Sitemap nativo: remover TODAS as tags (post_tag) --- */
+add_filter( 'wp_sitemaps_taxonomies', function ( $taxonomies ) {
+	unset( $taxonomies['post_tag'] );
+	return $taxonomies;
+} );
