@@ -4,6 +4,39 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.31] - 2026-10-15
+### Corrigido
+- A11y 94→: links de conteúdo (entry-content/summary/excerpt, textwidget,
+  comment-content) com underline estático — "Links rely on color to be
+  distinguishable". Link do Discord no sidebar com alt real ("Links do not
+  have a discernible name").
+### Adicionado
+- preconnect fonts.googleapis.com (o hint original cobria só gstatic; o CSS
+  de fontes é render-blocking no caminho crítico).
+- .htaccess: 301 apex→www direto no Apache (antes o redirect_canonical fazia
+  bootstrap PHP completo; "Document request latency" 1.230ms → ~0.3s).
+### Removido
+- wp-components/style.min.css (15KiB render-blocking, CSS do editor) do
+  front via style_loader_tag — dequeue não funciona pois o handle é
+  re-enfileirado pelas dependências de bloco no WP 7.1. wp-theme
+  (design-tokens) preservado (blocks usam var(--wp--*)).
+
+## [2.7.30] - 2026-10-14
+### Adicionado
+- SEO meta + Open Graph/Twitter Cards nativos (embeds de Discord/Telegram/
+  WhatsApp/X): meta description (home/posts/excerpt), og:title/description/
+  url/type/image (+width/height/alt), article:published/modified/section/
+  tag, twitter:card summary_large_image. og:image default = logo (ID 26302).
+### Corrigido
+- Widget PKGi do sidebar com alt + width/height (a11y).
+- CLS: min-height no .google-auto-placed (AdSense Auto Ads).
+- more-link "Continuar lendo" com underline estático.
+- post-thumbnail links com tabindex="-1" (aria-hidden-focus, 23 links).
+### Notas
+- wp-components: dequeue tentado em wp_enqueue_scripts(20), wp_head(1,2),
+  wp_print_styles(-1, PHP_INT_MAX) e enqueue_block_assets(999) — nenhum
+  pegou; style_loader_tag é o corte definitivo.
+
 ## [2.7.29] - 2026-10-14
 ### Alterado
 - Auditoria Query Monitor: jquery-migrate removido do front (alias jquery sem a

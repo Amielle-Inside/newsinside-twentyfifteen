@@ -1511,3 +1511,186 @@ add_action( 'wp_default_scripts', function ( $scripts ) {
 		$jquery->deps = array_diff( $jquery->deps, array( 'jquery-migrate' ) );
 	}
 } );
+
+
+/* ============================================================
+ * [NI v2.7.30] SEO meta + Open Graph / Twitter Cards (embeds sociais)
+ * Discord, Telegram, WhatsApp, X etc. precisam de og:* para gerar
+ * preview do link. Emissive: meta description (home + posts), og:title,
+ * og:description, og:url, og:type, og:image (featured ou logo default),
+ * article:* (publicado/modificado/seção/tags), twitter:card.
+ * ============================================================ */
+
+/* og:image default do site (home/arquivos/tags): logo 629x710 */
+if ( ! defined( 'NI_OG_DEFAULT_IMAGE' ) ) {
+	define( 'NI_OG_DEFAULT_IMAGE', 26302 ); /* ID da mídia logo2018v2.png */
+}
+
+function ni_og_image_data( $post_id = 0 ) {
+	$img = array( 'url' => '', 'width' => 0, 'height' => 0, 'alt' => '' );
+	$sizes = array( 'full', 'large', 'medium_large', 'medium' );
+	$att_id = 0;
+	if ( $post_id && has_post_thumbnail( $post_id ) ) {
+		$att_id = (int) get_post_thumbnail_id( $post_id );
+	} else {
+		$att_id = (int) NI_OG_DEFAULT_IMAGE;
+	}
+	foreach ( $sizes as $size ) {
+		$data = wp_get_attachment_image_src( $att_id, $size );
+		if ( ! empty( $data[0] ) ) {
+			$img['url']    = $data[0];
+			$img['width']  = (int) $data[1];
+			$img['height'] = (int) $data[2];
+			break;
+		}
+	}
+	if ( empty( $img['url'] ) ) {
+		$default = wp_get_attachment_image_src( (int) NI_OG_DEFAULT_IMAGE, 'full' );
+		if ( ! empty( $default[0] ) ) {
+			$img['url']    = $default[0];
+			$img['width']  = (int) $default[1];
+			$img['height'] = (int) $default[2];
+		}
+	}
+	if ( $att_id ) {
+		$img['alt'] = (string) get_post_meta( $att_id, '_wp_attachment_image_alt', true );
+		if ( '' === trim( $img['alt'] ) ) {
+			$img['alt'] = (string) get_the_title( $post_id ? (int) $post_id : $att_id );
+		}
+	}
+	return $img;
+}
+
+function ni_meta_description() {
+	$desc = '';
+	if ( is_singular() ) {
+		$post = get_queried_object();
+		if ( $post ) {
+			/* excerpt manual (campo Resumo) em primeiro lugar */
+			if ( ! empty( $post->post_excerpt ) ) {
+				$desc = $post->post_excerpt;
+			} else {
+				/* gerado do conteúdo: primeiro parágrafo com texto */
+				$desc = wp_trim_words( wp_strip_all_tags( $post->post_content ), 28, '…' );
+			}
+		}
+	} elseif ( is_tag() || is_category() ) {
+		$term = get_queried_object();
+		if ( $term && ! empty( $term->description ) ) {
+			$desc = wp_trim_words( wp_strip_all_tags( $term->description ), 28, '…' );
+		} else {
+			$desc = sprintf( 'Arquivo de %s no NewsInside — notícias e guias da cena homebrew, retroconsoles e retrogames.', single_term_title( '', false ) );
+		}
+	} elseif ( is_home() || is_front_page() ) {
+		$desc = get_bloginfo( 'description' );
+	}
+	$desc = trim( $desc );
+	if ( mb_strlen( $desc ) > 160 ) {
+		$desc = mb_substr( $desc, 0, 157 ) . '…';
+	}
+	return $desc;
+}
+
+function ni_seo_meta_tags() {
+	if ( is_admin() || is_feed() || is_robots() || is_search() ) {
+		return;
+	}
+
+	$site_name = get_bloginfo( 'name' );
+	$desc      = ni_meta_description();
+
+	/* ---- meta description (Google/PSI SEO) ---- */
+	if ( $desc ) {
+		printf( '<meta name="description" content="%s">' . "\n", esc_attr( $desc ) );
+	}
+
+	/* ---- Open Graph ---- */
+	$og = array(
+		'og:locale'    => get_locale(),
+		'og:site_name' => $site_name,
+	);
+
+	if ( is_singular() ) {
+		$post     = get_queried_object();
+		$title    = single_post_title( '', false );
+		$og['og:type'] = 'article';
+		$og['og:title'] = $title;
+		$og['og:url']  = get_permalink( $post );
+		$og['article:published_time'] = get_the_date( DATE_W3C, $post );
+		$og['article:modified_time'] = get_the_modified_date( DATE_W3C, $post );
+		$cats = get_the_category( $post->ID );
+		if ( $cats && ! is_wp_error( $cats ) ) {
+			$og['article:section'] = $cats[0]->name;
+		}
+		$img = ni_og_image_data( $post->ID );
+	} else {
+		$title = wp_get_document_title();
+		$og['og:type']  = 'website';
+		$og['og:title'] = $title;
+		$path = wp_parse_url( home_url( add_query_arg( array() ) ), PHP_URL_PATH );
+		$og['og:url']   = home_url( $path );
+		$img = ni_og_image_data( 0 );
+	}
+
+	if ( $desc ) {
+		$og['og:description'] = $desc;
+	}
+	if ( ! empty( $img['url'] ) ) {
+		$og['og:image']        = $img['url'];
+		$og['og:image:width']  = $img['width'];
+		$og['og:image:height'] = $img['height'];
+		if ( ! empty( $img['alt'] ) ) {
+			$og['og:image:alt'] = $img['alt'];
+		}
+	}
+
+	foreach ( $og as $property => $content ) {
+		if ( '' !== $content && null !== $content ) {
+			printf( '<meta property="%s" content="%s">' . "\n", esc_attr( $property ), esc_attr( $content ) );
+		}
+	}
+
+	/* ---- Twitter Card (X/Twitter + fallback de plataformas sem og) ---- */
+	$tw = array(
+		'twitter:card' => ( is_singular() && has_post_thumbnail() ) ? 'summary_large_image' : 'summary',
+	);
+	if ( isset( $og['og:title'] ) ) {
+		$tw['twitter:title'] = $og['og:title'];
+	}
+	if ( isset( $og['og:description'] ) ) {
+		$tw['twitter:description'] = $og['og:description'];
+	}
+	if ( ! empty( $img['url'] ) ) {
+		$tw['twitter:image'] = $img['url'];
+	}
+	foreach ( $tw as $name => $content ) {
+		printf( '<meta name="%s" content="%s">' . "\n", esc_attr( $name ), esc_attr( $content ) );
+	}
+}
+add_action( 'wp_head', 'ni_seo_meta_tags', 4 ); /* antes do canonical (5) e noindex (6) */
+
+
+/* ============================================================
+ * [NI v2.7.30] Performance: render-blocking CSS
+ * PSI mobile: "Solicitações que bloquearam a renderização" 2.870ms.
+ * - wp-components (15KiB): CSS do EDITOR/admin (botões, dropdowns) —
+ *   inútil no front-end; dequeue para visitante.
+ * - preconnect fonts.googleapis.com: o CSS de fontes é render-blocking
+ *   no caminho crítico (o hint original só cobria fonts.gstatic.com).
+ * ============================================================ */
+add_filter( 'style_loader_tag', function ( $html, $handle ) {
+	if ( 'wp-components' === $handle && ! is_admin() && ! current_user_can( 'manage_options' ) ) {
+		return '';
+	}
+	return $html;
+}, 10, 2 ); /* front-end: nao imprime o CSS do editor */
+
+add_filter( 'wp_resource_hints', function ( $urls, $relation_type ) {
+	if ( 'preconnect' === $relation_type ) {
+		$urls[] = array(
+			'href'        => 'https://fonts.googleapis.com',
+			'crossorigin',
+		);
+	}
+	return $urls;
+}, 20, 2 );

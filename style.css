@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.29
+Version: 2.7.31
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -6460,8 +6460,16 @@ body.ni-dark .google-auto-placed {
 }
 
 /* Ocupação correta: ads auto-injetados respeitam a largura da coluna */
+/* [NI 2026-10-14 v2.7.30] Reserva de espaço ANTES do JS do AdSense carregar:
+   mata o CLS 0.36 do #content no mobile (Lighthouse: layout-shift do auto-ad) */
 .google-auto-placed {
 	max-width: 100%;
+	min-height: 120px;
+}
+@media ( max-width: 59.6874em ) {
+	.google-auto-placed {
+		min-height: 100px;
+	}
 }
 
 /* == [NI 2026-10-13 v2.7.6] Ícones Genericons (dropdown + metas) no dark == */
@@ -7023,4 +7031,41 @@ body.ni-dark .ni-search-submit:focus-visible {
    o ad não preenche. */
 .google-auto-placed {
 	min-height: 120px;
+}
+
+
+/* == [NI 2026-10-14 v2.7.30] A11y: "Continuar lendo" distinguível sem cor ==
+   Lighthouse link-in-text-block: links dentro de bloco de texto não podem
+   depender só de cor. Underline direto (não :hover) resolve sem mudar layout. */
+.entry-content .more-link {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.entry-content .more-link:hover,
+.entry-content .more-link:focus {
+	text-decoration: none;
+}
+
+/* ============================================================
+ * [NI v2.7.31] A11y: links distinguidos sem depender de cor
+ * Lighthouse: "Links rely on color to be distinguishable".
+ * Links de conteúdo recebem underline estático (some no hover,
+ * onde o contexto visual muda anyway).
+ * ============================================================ */
+.entry-content a,
+.entry-summary a,
+.entry-excerpt a,
+.textwidget a,
+.comment-content a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.entry-content a:hover,
+.entry-content a:focus,
+.entry-summary a:hover,
+.entry-summary a:focus,
+.entry-excerpt a:hover,
+.textwidget a:hover,
+.comment-content a:hover {
+	text-decoration: none;
 }
