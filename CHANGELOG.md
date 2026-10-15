@@ -4,6 +4,14 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.32] - 2026-10-15
+### Corrigido
+- Embed do X/Twitter não gerava card: og:image/twitter:image apontavam para
+  imagens .webp (uploads nativos webp), formato que o pipeline de card do X
+  não renderiza de forma confiável. Nova função ni_webp_to_jpeg_url(): converte
+  webp para JPEG (qualidade 82) na primeira solicitação, com cache em
+  uploads/og-cache/, e troca a URL nas tags og/twitter.
+
 ## [2.7.31] - 2026-10-15
 ### Corrigido
 - A11y 94→: links de conteúdo (entry-content/summary/excerpt, textwidget,

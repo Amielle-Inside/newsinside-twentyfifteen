@@ -1,4 +1,5 @@
 <?php
+/* NI-MARKER-2.7.31-A */
 
 /**
 
@@ -1526,6 +1527,42 @@ if ( ! defined( 'NI_OG_DEFAULT_IMAGE' ) ) {
 	define( 'NI_OG_DEFAULT_IMAGE', 26302 ); /* ID da mídia logo2018v2.png */
 }
 
+/**
+ * [NI v2.7.32] Converte uma URL de imagem .webp para JPEG (cache em
+ * uploads/og-cache/). Retorna a URL .jpg ou '' em caso de falha.
+ */
+function ni_webp_to_jpeg_url( $url ) {
+	$path = wp_parse_url( $url, PHP_URL_PATH );
+	if ( ! $path ) {
+		return '';
+	}
+	$file = ABSPATH . ltrim( $path, '/' );
+	if ( ! file_exists( $file ) ) {
+		return '';
+	}
+	$up    = wp_upload_dir();
+	$base  = basename( $path );
+	$name  = pathinfo( $base, PATHINFO_FILENAME );
+	$cache = trailingslashit( $up['basedir'] ) . 'og-cache';
+	if ( ! is_dir( $cache ) ) {
+		wp_mkdir_p( $cache );
+	}
+	$cache_file = $cache . '/' . $name . '.jpg';
+	$cache_url  = trailingslashit( $up['baseurl'] ) . 'og-cache/' . $name . '.jpg';
+	if ( ! file_exists( $cache_file ) ) {
+		$editor = wp_get_image_editor( $file );
+		if ( is_wp_error( $editor ) ) {
+			return '';
+		}
+		$editor->set_quality( 82 );
+		$saved = $editor->save( $cache_file, 'image/jpeg' );
+		if ( is_wp_error( $saved ) ) {
+			return '';
+		}
+	}
+	return $cache_url;
+}
+
 function ni_og_image_data( $post_id = 0 ) {
 	$img = array( 'url' => '', 'width' => 0, 'height' => 0, 'alt' => '' );
 	$sizes = array( 'full', 'large', 'medium_large', 'medium' );
@@ -1552,6 +1589,14 @@ function ni_og_image_data( $post_id = 0 ) {
 			$img['height'] = (int) $default[2];
 		}
 	}
+	// [NI v2.7.32] compat X/Twitter: webp para jpeg
+	if ( ! empty( $img['url'] ) && preg_match( '/\.webp($|\?)/i', $img['url'] ) ) {
+		$jpg = ni_webp_to_jpeg_url( $img['url'] );
+		if ( $jpg ) {
+			$img['url'] = $jpg;
+		}
+	}
+
 	if ( $att_id ) {
 		$img['alt'] = (string) get_post_meta( $att_id, '_wp_attachment_image_alt', true );
 		if ( '' === trim( $img['alt'] ) ) {
