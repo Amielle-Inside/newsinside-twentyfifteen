@@ -4,7 +4,7 @@ Theme URI: https://www.newsinside.org/
 Author: NewsInside (fork de Twenty Fifteen, WordPress team)
 Author URI: https://www.newsinside.org/
 Description: Fork do Twenty Fifteen para o NewsInside: adiciona o botao "Continuar lendo" em TODOS os posts das listagens (home, arquivos, busca), mesmo quando o post nao usa a tag more nem possui resumo manual.
-Version: 2.7.32
+Version: 2.7.33
 Requires PHP: 5.2.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -7068,4 +7068,61 @@ body.ni-dark .ni-search-submit:focus-visible {
 .textwidget a:hover,
 .comment-content a:hover {
 	text-decoration: none;
+}
+
+/* [NI v2.7.33] Sidebar: imagens dos widgets no tamanho correto.
+   O padding horizontal do .widget (pensado pra texto) espremia as
+   imagens-botao a 60%. Widgets com imagem-banner ficam sem padding-x
+   e a imagem preenche 100% do widget. */
+.widget.widget_block:has(> p > a > img) {
+	padding-left: 0;
+	padding-right: 0;
+}
+.widget.widget_block:has(> p > a > img) img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+}
+.widget.widget_block:has(> .is-layout-flow > p > a > img) {
+	padding-left: 0;
+	padding-right: 0;
+}
+/* Botao Telegram (override wptelegram) com as cores do tema */
+.ni-telegram-wrap { text-align: center; }
+.ni-telegram-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+	padding: 0.7em 1.4em;
+	background: #333;
+	color: #fff !important;
+	text-decoration: none;
+	border-radius: 4px;
+	font-weight: 700;
+	font-size: 1em;
+	line-height: 1.2;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+.ni-telegram-btn:hover,
+.ni-telegram-btn:focus { background: #707070; color: #fff !important; }
+.ni-telegram-btn:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+body.ni-dark .ni-telegram-btn { background: #e6e6e6; color: #141414 !important; }
+body.ni-dark .ni-telegram-btn:hover,
+body.ni-dark .ni-telegram-btn:focus { background: #fff; color: #141414 !important; }
+
+/* v2.7.33 complemento: imgs direto sob <a> (sem <p>) e dentro de figure */
+.widget.widget_block:has(> a > img),
+.widget.widget_block:has(> figure > a > img),
+.widget.widget_block:has(> .wp-block-image > a > img) {
+	padding-left: 0;
+	padding-right: 0;
+}
+.widget.widget_block:has(> a > img) > a > img,
+.widget.widget_block:has(> figure > a > img) img,
+.widget.widget_block:has(> .wp-block-image > a > img) img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
 }

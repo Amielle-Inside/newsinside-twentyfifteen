@@ -4,6 +4,24 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.33] - 2026-10-15
+### Corrigido
+- `
+` literais visíveis na sidebar: os widgets block restaurados do dump SQL
+  tinham `
+` gravados como texto no content — limpos via REST em block-2/3/4.
+- Imagens-banhér da sidebar (Discord, doação, PKGi) renderizavam a 163px
+  (60% do widget) porque o padding horizontal do `.widget` (pensado para
+  texto) as espremia. Widgets contendo imagem-banner ficam sem padding-x e
+  a imagem preenche 100% do widget via `:has()`.
+
+### Adicionado
+- Botão "Entrar no canal do Telegram" (shortcode `wptelegram-join-channel`
+  do plugin WP Telegram Widget) no topo da sidebar, substituindo a imagem
+  telegram2024.WEBP. Template override `wptelegram-widget/join-channel.php`
+  com markup própria (`.ni-telegram-btn`) — independente do CSS wp-components
+  (removido do front na v2.7.31). Cores seguem o tema: #333/#fff no Light
+  Side, #e6e6e6/#141414 no Dark Side.
 ## [2.7.32] - 2026-10-15
 ### Corrigido
 - Embed do X/Twitter não gerava card: og:image/twitter:image apontavam para
