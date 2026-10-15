@@ -1739,3 +1739,25 @@ add_filter( 'wp_resource_hints', function ( $urls, $relation_type ) {
 	}
 	return $urls;
 }, 20, 2 );
+
+/**
+ * [NI v2.7.34] SEO: páginas de busca interna.
+ * O Google rastreia URLs ?s= do site (formulários, plugins, bots) e elas
+ * entram no GSC como "Cópia sem página canônica" / "Rastreada, mas não
+ * indexada". Correção: noindex + canonical para a home nas buscas.
+ */
+function ni_search_noindex( $robots ) {
+	if ( is_search() ) {
+		$robots['noindex'] = true;
+		$robots['nofollow'] = true;
+	}
+	return $robots;
+}
+add_filter( 'wp_robots', 'ni_search_noindex' );
+
+function ni_search_canonical() {
+	if ( is_search() ) {
+		printf( "<link rel='canonical' href='%s' />\n", esc_url( home_url( '/' ) ) );
+	}
+}
+add_action( 'wp_head', 'ni_search_canonical', 9 );

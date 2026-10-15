@@ -4,6 +4,11 @@ Todas as mudanças notáveis deste fork são documentadas aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/);
 versionamento semântico adaptado ao tema (2.6.x = correções, 2.7 = feature).
 
+## [2.7.34] - 2026-10-15
+### Adicionado
+- SEO: buscas internas (?s=) emitem meta robots noindex,nofollow + canonical
+  para a home. O Google acumulava 864 URLs "Cópia sem página canônica" e
+  1.652 "Rastreada, mas não indexada" vindas de buscas rastreadas.
 ## [2.7.33] - 2026-10-15
 ### Corrigido
 - `
