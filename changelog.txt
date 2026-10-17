@@ -21,3 +21,8 @@ Changelog for twentyfifteen-more
  * - Updated theme update hiding to include newer default themes:
  *   Added twenty-twenty-three, twenty-twenty-four, twenty-twenty-five to the list.
  * - Function ni_hide_default_theme_updates now hides updates for all default themes up to twenty-twenty-five.
+
+* v2.7.39 - 2026-10-16
+ * - Fixed syntax error in functions.php: escaped single quotes in theme list.
+ * - Updated theme update hiding to include newer default themes up to twenty-twenty-five.
+ * - Bumped version to 2.7.39.
