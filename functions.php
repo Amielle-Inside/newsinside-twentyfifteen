@@ -1762,7 +1762,6 @@ function ni_search_canonical() {
 }
 add_action( 'wp_head', 'ni_search_canonical', 9 );
 
-<?php
 /*
  * Auto-append UTM parameters for social sharing
  * Adds a meta box to the post edit screen with pre-filled UTM parameters
@@ -1835,4 +1834,3 @@ if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
     }
     add_action( 'save_post', 'ni_utm_share_save_postdata' );
 }
-?>
