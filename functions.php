@@ -1761,3 +1761,78 @@ function ni_search_canonical() {
 	}
 }
 add_action( 'wp_head', 'ni_search_canonical', 9 );
+
+<?php
+/*
+ * Auto-append UTM parameters for social sharing
+ * Adds a meta box to the post edit screen with pre-filled UTM parameters
+ * and a ready-to-copy URL for sharing.
+ */
+if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
+    function ni_utm_share_meta_box() {
+        add_meta_box(
+            'ni_utm_share',
+            __( 'UTM Compartilhamento', 'twentyfifteen-more' ),
+            'ni_utm_share_meta_box_callback',
+            'post',
+            'side',
+            'default'
+        );
+    }
+    add_action( 'add_meta_boxes', 'ni_utm_share_meta_box' );
+    function ni_utm_share_meta_box_callback( $post ) {
+        // Add nonce for security
+        wp_nonce_field( 'ni_utm_share_save', 'ni_utm_share_nonce' );
+        // Get the post's permalink
+        $permalink = get_permalink( $post->ID );
+        // Default UTM values
+        $utm_source = isset( $_POST['ni_utm_source'] ) ? sanitize_text_field( $_POST['ni_utm_source'] ) : 'youtube';
+        $utm_medium = isset( $_POST['ni_utm_medium'] ) ? sanitize_text_field( $_POST['ni_utm_medium'] ) : 'social';
+        $utm_campaign = isset( $_POST['ni_utm_campaign'] ) ? sanitize_text_field( $_POST['ni_utm_campaign'] ) : '';
+        // If empty campaign, suggest post title
+        if ( empty( $utm_campaign ) ) {
+            $utm_campaign = sanitize_title( get_the_title( $post->ID ) );
+        }
+        // Build UTM string
+        $utm_params = array();
+        if ( ! empty( $utm_source ) ) $utm_params[] = 'utm_source=' . $utm_source;
+        if ( ! empty( $utm_medium ) ) $utm_params[] = 'utm_medium=' . $utm_medium;
+        if ( ! empty( $utm_campaign ) ) $utm_params[] = 'utm_campaign=' . $utm_campaign;
+        $utm_string = implode( '&', $utm_params );
+        $final_url = $utm_string ? add_query_arg( $utm_params, $permalink ) : $permalink;
+        ?>
+        <p><label for="ni_utm_source"><?php _e( 'Fonte (utm_source):', 'twentyfifteen-more' ); ?></label><br>
+        <input type="text" id="ni_utm_source" name="ni_utm_source" value="<?php echo esc_attr( $utm_source ); ?>" style="width:100%;" placeholder="ex: youtube" /></p>
+        <p><label for="ni_utm_medium"><?php _e( 'Mídia (utm_medium):', 'twentyfifteen-more' ); ?></label><br>
+        <input type="text" id="ni_utm_medium" name="ni_utm_medium" value="<?php echo esc_attr( $utm_medium ); ?>" style="width:100%;" placeholder="ex: social" /></p>
+        <p><label for="ni_utm_campaign"><?php _e( 'Campanha (utm_campaign):', 'twentyfifteen-more' ); ?></label><br>
+        <input type="text" id="ni_utm_campaign" name="ni_utm_campaign" value="<?php echo esc_attr( $utm_campaign ); ?>" style="width:100%;" placeholder="ex: nome_do_video" /></p>
+        <hr>
+        <p><strong><?php _e( 'URL para compartilhar:', 'twentyfifteen-more' ); ?></strong></p>
+        <input type="text" id="ni_utm_final_url" value="<?php echo esc_attr( $final_url ); ?>" style="width:100%; font-family:monospace;" readonly onclick="this.select();" />
+        <p><?php _e( 'Clique no campo acima para copiar a URL completa com parâmetros UTM.', 'twentyfifteen-more' ); ?></p>
+        <?php
+    }
+    function ni_utm_share_save_postdata( $post_id ) {
+        // Check nonce
+        if ( ! isset( $_POST['ni_utm_share_nonce'] ) || ! wp_verify_nonce( $_POST['ni_utm_share_nonce'], 'ni_utm_share_save' ) ) {
+            return $post_id;
+        }
+        // Check autosave
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return $post_id;
+        }
+        // Check permissions
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return $post_id;
+        }
+        // Save custom fields (optional, if you want to persist)
+        // We don't need to save; we just use the values for the meta box display.
+        // If you want to persist, uncomment:
+        // update_post_meta( $post_id, 'ni_utm_source', sanitize_text_field( $_POST['ni_utm_source'] ) );
+        // update_post_meta( $post_id, 'ni_utm_medium', sanitize_text_field( $_POST['ni_utm_medium'] ) );
+        // update_post_meta( $post_id, 'ni_utm_campaign', sanitize_text_field( $_POST['ni_utm_campaign'] ) );
+    }
+    add_action( 'save_post', 'ni_utm_share_save_postdata' );
+}
+?>

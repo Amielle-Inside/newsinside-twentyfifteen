@@ -1,0 +1,8 @@
+Changelog for twentyfifteen-more
+====================
+
+
+* v2.7.35 - 2026-10-16
+ * - Added UTM Compartilhamento meta box to post editor for easy UTM parameter insertion.
+ *   Includes pre-filled defaults (source: youtube, medium: social, campaign: post title) and a ready-to-copy URL.
+ * - Updated functions.php with ni_utm_share_meta_box() and related functions.
