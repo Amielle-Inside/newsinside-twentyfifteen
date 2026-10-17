@@ -1841,15 +1841,18 @@ if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
 function ni_hide_default_theme_updates($value) {
     // List of default theme slugs to hide updates for
     $default_themes = array(
-        'twentyfifteen',
-        'twentysixteen',
-        'twentyseventeen',
-        'twentynineteen',
-        'twentytwenty',
-        'twentytwentyone',
-        'twentytwentytwo',
-        'twentythree',
-        'twentyfour',
+        'twentyfifteen",
+        'twentysixteen",
+        'twentyseventeen",
+        'twentynineteen",
+        'twentytwenty",
+        'twentytwentyone",
+        'twentytwentytwo",
+        'twentythree",
+        'twentyfour",
+        'twentytwentythree",
+        'twentytwentyfour",
+        'twentytwentyfive",
         // Add more as needed
     );
     foreach ($default_themes as $theme) {

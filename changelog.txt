@@ -16,3 +16,8 @@ Changelog for twentyfifteen-more
  * - Added code to disable update notifications for default WordPress themes.
  * - Prevents update prompts for bundled themes (twentyfifteen, twentysixteen, etc.) that are not in use.
  * - Added function ni_hide_default_theme_updates() and hooked to site_transient_update_themes.
+
+* v2.7.38 - 2026-10-16
+ * - Updated theme update hiding to include newer default themes:
+ *   Added twenty-twenty-three, twenty-twenty-four, twenty-twenty-five to the list.
+ * - Function ni_hide_default_theme_updates now hides updates for all default themes up to twenty-twenty-five.
