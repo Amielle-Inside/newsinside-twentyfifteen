@@ -31,3 +31,13 @@ Changelog for twentyfifteen-more
  * - Fixed syntax error: removed escaped single quotes in theme list.
  * - Ensured proper quoting in ni_hide_default_theme_updates function.
  * - Verified braces count and PHP tags.
+
+* v2.7.41 - 2026-10-17
+ * - Meta box "UTM Compartilhamento" v2: Fonte e Midia agora sao dropdowns
+ *   (youtube/tiktok/twitter/telegram/facebook e social/video/chat/bio),
+ *   eliminando typos que fragmentam dados no GA4.
+ * - Campanha (utm_campaign) pre-preenchida automaticamente com o slug do post.
+ * - Novo botao "Copiar link com UTM" (clipboard via navigator.clipboard com
+ *   fallback execCommand); campo readonly mostra a URL final em tempo real.
+ * - Normalizacao automatica da campanha (minusculas, sem espacos/acentos).
+ * - Lintado com php -l (PHP 8.3) antes do deploy.

@@ -1763,11 +1763,20 @@ function ni_search_canonical() {
 add_action( 'wp_head', 'ni_search_canonical', 9 );
 
 /*
- * Auto-append UTM parameters for social sharing
- * Adds a meta box to the post edit screen with pre-filled UTM parameters
- * and a ready-to-copy URL for sharing.
+ * UTM Compartilhamento (v2) — dropdowns de fonte/mídia (evita typos que
+ * fragmentam dados no GA4), campanha automática = slug do post e botão
+ * "Copiar link com UTM" (clipboard). Valores efêmeros, não persistem no DB.
  */
 if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
+
+    function ni_utm_sources() {
+        return array( 'youtube', 'tiktok', 'twitter', 'telegram', 'facebook' );
+    }
+
+    function ni_utm_mediums() {
+        return array( 'social', 'video', 'chat', 'bio' );
+    }
+
     function ni_utm_share_meta_box() {
         add_meta_box(
             'ni_utm_share',
@@ -1779,58 +1788,84 @@ if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
         );
     }
     add_action( 'add_meta_boxes', 'ni_utm_share_meta_box' );
+
     function ni_utm_share_meta_box_callback( $post ) {
-        // Add nonce for security
         wp_nonce_field( 'ni_utm_share_save', 'ni_utm_share_nonce' );
-        // Get the post's permalink
-        $permalink = get_permalink( $post->ID );
-        // Default UTM values
-        $utm_source = isset( $_POST['ni_utm_source'] ) ? sanitize_text_field( $_POST['ni_utm_source'] ) : 'youtube';
-        $utm_medium = isset( $_POST['ni_utm_medium'] ) ? sanitize_text_field( $_POST['ni_utm_medium'] ) : 'social';
-        $utm_campaign = isset( $_POST['ni_utm_campaign'] ) ? sanitize_text_field( $_POST['ni_utm_campaign'] ) : '';
-        // If empty campaign, suggest post title
-        if ( empty( $utm_campaign ) ) {
-            $utm_campaign = sanitize_title( get_the_title( $post->ID ) );
-        }
-        // Build UTM string
-        $utm_params = array();
-        if ( ! empty( $utm_source ) ) $utm_params[] = 'utm_source=' . $utm_source;
-        if ( ! empty( $utm_medium ) ) $utm_params[] = 'utm_medium=' . $utm_medium;
-        if ( ! empty( $utm_campaign ) ) $utm_params[] = 'utm_campaign=' . $utm_campaign;
-        $utm_string = implode( '&', $utm_params );
-        $final_url = $utm_string ? add_query_arg( $utm_params, $permalink ) : $permalink;
+
+        $permalink  = get_permalink( $post->ID );
+        $slug       = $post->post_name ? $post->post_name : sanitize_title( get_the_title( $post->ID ) );
+        $sel_source = 'youtube';
+        $sel_medium = 'social';
+        $campaign   = $slug;
         ?>
         <p><label for="ni_utm_source"><?php _e( 'Fonte (utm_source):', 'twentyfifteen-more' ); ?></label><br>
-        <input type="text" id="ni_utm_source" name="ni_utm_source" value="<?php echo esc_attr( $utm_source ); ?>" style="width:100%;" placeholder="ex: youtube" /></p>
+        <select id="ni_utm_source" style="width:100%;">
+            <?php foreach ( ni_utm_sources() as $s ) : ?>
+                <option value="<?php echo esc_attr( $s ); ?>" <?php selected( $sel_source, $s ); ?>><?php echo esc_html( $s ); ?></option>
+            <?php endforeach; ?>
+        </select></p>
+
         <p><label for="ni_utm_medium"><?php _e( 'Mídia (utm_medium):', 'twentyfifteen-more' ); ?></label><br>
-        <input type="text" id="ni_utm_medium" name="ni_utm_medium" value="<?php echo esc_attr( $utm_medium ); ?>" style="width:100%;" placeholder="ex: social" /></p>
+        <select id="ni_utm_medium" style="width:100%;">
+            <?php foreach ( ni_utm_mediums() as $m ) : ?>
+                <option value="<?php echo esc_attr( $m ); ?>" <?php selected( $sel_medium, $m ); ?>><?php echo esc_html( $m ); ?></option>
+            <?php endforeach; ?>
+        </select></p>
+
         <p><label for="ni_utm_campaign"><?php _e( 'Campanha (utm_campaign):', 'twentyfifteen-more' ); ?></label><br>
-        <input type="text" id="ni_utm_campaign" name="ni_utm_campaign" value="<?php echo esc_attr( $utm_campaign ); ?>" style="width:100%;" placeholder="ex: nome_do_video" /></p>
+        <input type="text" id="ni_utm_campaign" value="<?php echo esc_attr( $campaign ); ?>" style="width:100%;" /></p>
+
         <hr>
-        <p><strong><?php _e( 'URL para compartilhar:', 'twentyfifteen-more' ); ?></strong></p>
-        <input type="text" id="ni_utm_final_url" value="<?php echo esc_attr( $final_url ); ?>" style="width:100%; font-family:monospace;" readonly onclick="this.select();" />
-        <p><?php _e( 'Clique no campo acima para copiar a URL completa com parâmetros UTM.', 'twentyfifteen-more' ); ?></p>
+        <p><strong><?php _e( 'URL final com UTM:', 'twentyfifteen-more' ); ?></strong></p>
+        <input type="text" id="ni_utm_final_url" value="" style="width:100%; font-family:monospace;" readonly onclick="this.select();" />
+        <p><button type="button" class="button button-primary" id="ni_utm_copy_btn" style="width:100%;"><?php _e( 'Copiar link com UTM', 'twentyfifteen-more' ); ?></button></p>
+
+        <script>
+        (function(){
+            var base = <?php echo wp_json_encode( $permalink ); ?>;
+            var src = document.getElementById('ni_utm_source');
+            var med = document.getElementById('ni_utm_medium');
+            var cmp = document.getElementById('ni_utm_campaign');
+            var out = document.getElementById('ni_utm_final_url');
+            var btn = document.getElementById('ni_utm_copy_btn');
+            var resetLabel = <?php echo wp_json_encode( __( 'Copiar link com UTM', 'twentyfifteen-more' ) ); ?>;
+            function norm(s){ return String(s).toLowerCase().replace(/[^a-z0-9_-]+/g,'_').replace(/^_+|_+$/g,''); }
+            function build(){
+                var q = [];
+                if (src.value) { q.push('utm_source=' + encodeURIComponent(src.value)); }
+                if (med.value) { q.push('utm_medium=' + encodeURIComponent(med.value)); }
+                if (cmp.value) { q.push('utm_campaign=' + encodeURIComponent(cmp.value)); }
+                out.value = q.length ? base + '?' + q.join('&') : base;
+            }
+            src.addEventListener('change', build);
+            med.addEventListener('change', build);
+            cmp.addEventListener('input', function(){ cmp.value = norm(cmp.value); build(); });
+            build();
+            btn.addEventListener('click', function(){
+                function done(){ btn.textContent = '\u2713 Copiado!'; setTimeout(function(){ btn.textContent = resetLabel; }, 2000); }
+                function fallback(){ out.select(); try { document.execCommand('copy'); } catch(e){} done(); }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(out.value).then(done, fallback);
+                } else {
+                    fallback();
+                }
+            });
+        })();
+        </script>
         <?php
     }
+
     function ni_utm_share_save_postdata( $post_id ) {
-        // Check nonce
         if ( ! isset( $_POST['ni_utm_share_nonce'] ) || ! wp_verify_nonce( $_POST['ni_utm_share_nonce'], 'ni_utm_share_save' ) ) {
             return $post_id;
         }
-        // Check autosave
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
             return $post_id;
         }
-        // Check permissions
         if ( ! current_user_can( 'edit_post', $post_id ) ) {
             return $post_id;
         }
-        // Save custom fields (optional, if you want to persist)
-        // We don't need to save; we just use the values for the meta box display.
-        // If you want to persist, uncomment:
-        // update_post_meta( $post_id, 'ni_utm_source', sanitize_text_field( $_POST['ni_utm_source'] ) );
-        // update_post_meta( $post_id, 'ni_utm_medium', sanitize_text_field( $_POST['ni_utm_medium'] ) );
-        // update_post_meta( $post_id, 'ni_utm_campaign', sanitize_text_field( $_POST['ni_utm_campaign'] ) );
+        /* Sem persistência: os valores UTM são efêmeros, usados só no editor. */
     }
     add_action( 'save_post', 'ni_utm_share_save_postdata' );
 }
