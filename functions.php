@@ -1834,3 +1834,29 @@ if ( ! function_exists( 'ni_utm_share_meta_box' ) ) {
     }
     add_action( 'save_post', 'ni_utm_share_save_postdata' );
 }
+/*
+ * Disable update notifications for default WordPress themes
+ * Prevents update prompts for bundled themes that are not in use
+ */
+function ni_hide_default_theme_updates($value) {
+    // List of default theme slugs to hide updates for
+    $default_themes = array(
+        'twentyfifteen',
+        'twentysixteen',
+        'twentyseventeen',
+        'twentynineteen',
+        'twentytwenty',
+        'twentytwentyone',
+        'twentytwentytwo',
+        'twentythree',
+        'twentyfour',
+        // Add more as needed
+    );
+    foreach ($default_themes as $theme) {
+        if (isset($value->response[$theme])) {
+            unset($value->response[$theme]);
+        }
+    }
+    return $value;
+}
+add_filter('site_transient_update_themes', 'ni_hide_default_theme_updates');

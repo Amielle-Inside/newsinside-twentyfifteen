@@ -11,3 +11,8 @@ Changelog for twentyfifteen-more
  * - Fixed syntax error in functions.php caused by incorrect UTM meta box addition (unclosed PHP tag).
  * - Re-added UTM Compartilhamento meta box with proper PHP syntax.
  * - Ensured no stray HTML or PHP tags that could cause parsing errors.
+
+* v2.7.37 - 2026-10-16
+ * - Added code to disable update notifications for default WordPress themes.
+ * - Prevents update prompts for bundled themes (twentyfifteen, twentysixteen, etc.) that are not in use.
+ * - Added function ni_hide_default_theme_updates() and hooked to site_transient_update_themes.
