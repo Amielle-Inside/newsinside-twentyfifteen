@@ -26,3 +26,8 @@ Changelog for twentyfifteen-more
  * - Fixed syntax error in functions.php: escaped single quotes in theme list.
  * - Updated theme update hiding to include newer default themes up to twenty-twenty-five.
  * - Bumped version to 2.7.39.
+
+* v2.7.40 - 2026-10-16
+ * - Fixed syntax error: removed escaped single quotes in theme list.
+ * - Ensured proper quoting in ni_hide_default_theme_updates function.
+ * - Verified braces count and PHP tags.
