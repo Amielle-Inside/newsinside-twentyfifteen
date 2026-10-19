@@ -98,7 +98,7 @@ get_header(); ?>
 					?>
 
 					<header class="entry-header">
-						<?php the_title( '<h1 class="entry-title"> <a href="'.get_permalink().'">', '</a></h1>' ); ?>
+						<?php the_title( '<h1 class="entry-title"> <a href="'.esc_url( ni_continue_reading_url( get_permalink(), 'card' ) ).'">', '</a></h1>' ); ?>
 					</header><!-- .entry-header -->
 
 					<div class="entry-excerpt">

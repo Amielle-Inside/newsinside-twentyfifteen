@@ -1369,7 +1369,7 @@ function ni_infinite_scroll() {
 				if (!s && m0.source_url) s = { source_url: m0.source_url, width: m0.media_details ? m0.media_details.width : 743, height: m0.media_details ? m0.media_details.height : 292 };
 				if (s && s.source_url) {
 					var alt = esc(texto(m0.alt_text || p.title.rendered));
-					img = '<a class="post-thumbnail" href="' + esc(p.link) + '" aria-hidden="true">' +
+					img = '<a class="post-thumbnail" href="' + esc(niUtm(p.link, p.id, 'card')) + '" aria-hidden="true">' +
 						'<img width="' + (s.width || 743) + '" height="' + (s.height || 292) + '" ' +
 						'src="' + esc(s.source_url) + '" ' +
 						'alt="' + alt + '" decoding="async" loading="lazy" ' +
@@ -1380,20 +1380,20 @@ function ni_infinite_scroll() {
 			var exc = p.excerpt.rendered;  /* já vem <p>…</p>, sanitizado server-side */
 			return '<article id="post-' + p.id + '" class="post type-post format-standard has-post-thumbnail hentry">' +
 				img +
-				'<header class="entry-header"><h1 class="entry-title"> <a href="' + esc(p.link) + '">' + titulo + '</a></h1></header>' +
+				'<header class="entry-header"><h1 class="entry-title"> <a href="' + esc(niUtm(p.link, p.id, 'card')) + '">' + titulo + '</a></h1></header>' +
 				'<div class="entry-excerpt">' + exc +
 				'<p class="ni-continue-reading"><a class="more-link" href="' + esc(niUtm(p.link, p.id)) + '" rel="bookmark">Continuar lendo <span class="screen-reader-text">' + titulo + '</span><span aria-hidden="true">&rarr;</span></a></p>' +
 				'</div></article>';
 		}
 
-		function niUtm(base, id) {
+		function niUtm(base, id, medium) {
 			if (!base) return base;
 			try {
 				var u = new URL(base);
 				var segs = u.pathname.split('/').filter(Boolean);
 				var slug = segs.length ? segs[segs.length - 1] : String(id || '');
 				u.searchParams.set('utm_source', 'post-listing');
-				u.searchParams.set('utm_medium', 'continue-reading');
+				u.searchParams.set('utm_medium', medium || 'continue-reading');
 				u.searchParams.set('utm_campaign', slug);
 				return u.toString();
 			} catch (e) { return base; }
@@ -1918,7 +1918,7 @@ add_filter('site_transient_update_themes', 'ni_hide_default_theme_updates');
  *   utm_source=post-listing, utm_medium=continue-reading, utm_campaign=<slug do post>.
  * Post completo, admin, feed e embed ficam SEM UTM (canonical/SEO intactos).
  */
-function ni_continue_reading_url( $url = '' ) {
+function ni_continue_reading_url( $url = '', $medium = 'continue-reading' ) {
 	if ( is_singular() || is_admin() || is_feed() || is_embed() ) {
 		return $url ? $url : get_permalink();
 	}
@@ -1934,7 +1934,7 @@ function ni_continue_reading_url( $url = '' ) {
 	return add_query_arg(
 		array(
 			'utm_source'   => 'post-listing',
-			'utm_medium'   => 'continue-reading',
+			'utm_medium'   => $medium,
 			'utm_campaign' => $campaign,
 		),
 		$base

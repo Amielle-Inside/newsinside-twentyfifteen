@@ -414,7 +414,7 @@ if ( ! function_exists( 'twentyfifteen_post_thumbnail' ) ) :
 
 
 
-	<a class="post-thumbnail" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+	<a class="post-thumbnail" href="<?php echo esc_url( ni_continue_reading_url( get_permalink(), 'card' ) ); ?>" aria-hidden="true" tabindex="-1">
 
 		<?php
 

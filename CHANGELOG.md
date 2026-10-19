@@ -1,3 +1,12 @@
+## [2.7.43] - 2026-10-19
+### Alterado
+- UTM estendido a TODOS os cliques do card nas listagens: titulo do post e thumbnail
+  agora levam utm_medium=card (botao Continuar lendo mantem utm_medium=continue-reading).
+  Helper ni_continue_reading_url() ganhou param $medium; JS niUtm() idem. Pontos:
+  index.php (home), content.php (arquivos), content-search.php (busca),
+  template-tags.php (twentyfifteen_post_thumbnail + excerpt_more), cards REST da
+  rolagem infinita. Single/feed/embed continuam SEM UTM. Backup do DB
+  (19-10-2026-0822.sql.gz, md5 16de3592...) e dos arquivos no Nextcloud antes.
 ## [2.7.42] - 2026-10-17
 ### Adicionado
 - UTM no botao "Continuar lendo" (todas as listagens): helper ni_continue_reading_url()
