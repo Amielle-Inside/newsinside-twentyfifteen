@@ -1382,8 +1382,21 @@ function ni_infinite_scroll() {
 				img +
 				'<header class="entry-header"><h1 class="entry-title"> <a href="' + esc(p.link) + '">' + titulo + '</a></h1></header>' +
 				'<div class="entry-excerpt">' + exc +
-				'<p class="ni-continue-reading"><a class="more-link" href="' + esc(p.link) + '" rel="bookmark">Continuar lendo <span class="screen-reader-text">' + titulo + '</span><span aria-hidden="true">&rarr;</span></a></p>' +
+				'<p class="ni-continue-reading"><a class="more-link" href="' + esc(niUtm(p.link, p.id)) + '" rel="bookmark">Continuar lendo <span class="screen-reader-text">' + titulo + '</span><span aria-hidden="true">&rarr;</span></a></p>' +
 				'</div></article>';
+		}
+
+		function niUtm(base, id) {
+			if (!base) return base;
+			try {
+				var u = new URL(base);
+				var segs = u.pathname.split('/').filter(Boolean);
+				var slug = segs.length ? segs[segs.length - 1] : String(id || '');
+				u.searchParams.set('utm_source', 'post-listing');
+				u.searchParams.set('utm_medium', 'continue-reading');
+				u.searchParams.set('utm_campaign', slug);
+				return u.toString();
+			} catch (e) { return base; }
 		}
 
 		function carregar() {
@@ -1898,3 +1911,45 @@ function ni_hide_default_theme_updates($value) {
     return $value;
 }
 add_filter('site_transient_update_themes', 'ni_hide_default_theme_updates');
+
+/*
+ * [NI 2026-10-17] URL do botao "Continuar lendo" com UTM de engajamento.
+ * Todo clique no CTA das listagens (home/arquivo/busca) fica rastreavel no GA4:
+ *   utm_source=post-listing, utm_medium=continue-reading, utm_campaign=<slug do post>.
+ * Post completo, admin, feed e embed ficam SEM UTM (canonical/SEO intactos).
+ */
+function ni_continue_reading_url( $url = '' ) {
+	if ( is_singular() || is_admin() || is_feed() || is_embed() ) {
+		return $url ? $url : get_permalink();
+	}
+	$post_id = get_the_ID();
+	if ( ! $post_id ) {
+		return $url ? $url : get_permalink();
+	}
+	$campaign = get_post_field( 'post_name', $post_id );
+	if ( ! $campaign ) {
+		$campaign = (string) $post_id;
+	}
+	$base = $url ? $url : get_permalink( $post_id );
+	return add_query_arg(
+		array(
+			'utm_source'   => 'post-listing',
+			'utm_medium'   => 'continue-reading',
+			'utm_campaign' => $campaign,
+		),
+		$base
+	);
+}
+
+/*
+ * Filtro do more-link gerado pelo the_content() (caminho com resumo manual/more):
+ * substitui o href pelo mesmo URL com UTM do helper.
+ */
+function ni_more_link_utm( $link_html ) {
+	$utmed = ni_continue_reading_url( get_permalink() );
+	if ( $utmed && $utmed !== get_permalink() ) {
+		$link_html = preg_replace( '/href="[^"]*"/', 'href="' . esc_url( $utmed ) . '"', $link_html, 1 );
+	}
+	return $link_html;
+}
+add_filter( 'the_content_more_link', 'ni_more_link_utm' );

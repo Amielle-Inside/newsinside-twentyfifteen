@@ -104,7 +104,7 @@ get_header(); ?>
 					<div class="entry-excerpt">
 						<?php the_excerpt(); ?>
 						<p class="ni-continue-reading">
-							<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), the_title( '<span class="screen-reader-text">', '</span>', false ) ); ?><span aria-hidden="true">&rarr;</span></a>
+							<a class="more-link" href="<?php echo esc_url( ni_continue_reading_url() ); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), the_title( '<span class="screen-reader-text">', '</span>', false ) ); ?><span aria-hidden="true">&rarr;</span></a>
 						</p>
 						<?php
 							/*

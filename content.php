@@ -66,7 +66,7 @@
 				// título só para leitores de tela (confiança + contexto) — sem whitespace do template.
 				$ni_sr_title = the_title( '<span class="screen-reader-text">', '</span>', false );
 				?>
-				<a class="more-link" href="<?php the_permalink(); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), $ni_sr_title ); ?><span aria-hidden="true">&rarr;</span></a>
+				<a class="more-link" href="<?php echo esc_url( ni_continue_reading_url() ); ?>" rel="bookmark"><?php printf( __( 'Continuar lendo %s', 'twentyfifteen' ), $ni_sr_title ); ?><span aria-hidden="true">&rarr;</span></a>
 			</p>
 			<?php
 		endif;

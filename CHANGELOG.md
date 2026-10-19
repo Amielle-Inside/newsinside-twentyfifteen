@@ -1,3 +1,12 @@
+## [2.7.42] - 2026-10-17
+### Adicionado
+- UTM no botao "Continuar lendo" (todas as listagens): helper ni_continue_reading_url()
+  em functions.php + filtro the_content_more_link; botoes em content.php,
+  content-search.php, index.php (home inline) e twentyfifteen_excerpt_more().
+  Rolagem infinita: helper JS niUtm() nos cards REST. Parametros:
+  utm_source=post-listing, utm_medium=continue-reading, utm_campaign=<slug do post>.
+  Post completo (single), admin, feed e embed ficam SEM UTM — canonical/SEO intactos.
+  Backup pre-editado no Nextcloud (wp_backup/Continuar-Lendo-UTM_20261017-2115/).
 # Changelog
 
 Todas as mudanças notáveis deste fork são documentadas aqui.
