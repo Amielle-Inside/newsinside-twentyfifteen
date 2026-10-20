@@ -1,3 +1,8 @@
+## [2.7.44] - 2026-10-19
+### Adicionado
+- News sitemap do Google News (GN Publisher, /gn_sitemap.xml) declarado no robots.txt
+  via filtro robots_txt (ni_news_sitemap_robots). Backup pre-editado no Nextcloud
+  (wp_backup/Robots-GN-Sitemap_20261019-2358/).
 ## [2.7.43] - 2026-10-19
 ### Alterado
 - UTM estendido a TODOS os cliques do card nas listagens: titulo do post e thumbnail

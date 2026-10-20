@@ -1953,3 +1953,14 @@ function ni_more_link_utm( $link_html ) {
 	return $link_html;
 }
 add_filter( 'the_content_more_link', 'ni_more_link_utm' );
+
+/**
+ * Google News sitemap (GN Publisher) no robots.txt
+ */
+function ni_news_sitemap_robots( $output, $public ) {
+	if ( $public ) {
+		$output .= "\nSitemap: https://www.newsinside.org/gn_sitemap.xml\n";
+	}
+	return $output;
+}
+add_filter( 'robots_txt', 'ni_news_sitemap_robots', 10, 2 );
