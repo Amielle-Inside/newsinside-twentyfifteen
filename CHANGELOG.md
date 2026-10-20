@@ -10,12 +10,11 @@
 - wpautop fatiava o card do embed (div/h1 internos viravam paragrafos) —
   resolvido com tokenizacao em comentario HTML antes do wpautop.
   Backup DB (20-10-2026—1955.sql.gz, md5 29308d75...) e functions.php v2.7.44
-  no Nextcloud (wp_backup/GuiasInside-Embed_20261020/) antes da mudanca.
+  (arquivos + DB) antes da mudanca.
 ## [2.7.44] - 2026-10-19
 ### Adicionado
 - News sitemap do Google News (GN Publisher, /gn_sitemap.xml) declarado no robots.txt
-  via filtro robots_txt (ni_news_sitemap_robots). Backup pre-editado no Nextcloud
-  (wp_backup/Robots-GN-Sitemap_20261019-2358/).
+  via filtro robots_txt (ni_news_sitemap_robots). Backup pre-editado dos arquivos.
 ## [2.7.43] - 2026-10-19
 ### Alterado
 - UTM estendido a TODOS os cliques do card nas listagens: titulo do post e thumbnail
@@ -23,8 +22,7 @@
   Helper ni_continue_reading_url() ganhou param $medium; JS niUtm() idem. Pontos:
   index.php (home), content.php (arquivos), content-search.php (busca),
   template-tags.php (twentyfifteen_post_thumbnail + excerpt_more), cards REST da
-  rolagem infinita. Single/feed/embed continuam SEM UTM. Backup do DB
-  (19-10-2026-0822.sql.gz, md5 16de3592...) e dos arquivos no Nextcloud antes.
+  rolagem infinita. Single/feed/embed continuam SEM UTM. Backup de arquivos e DB antes.
 ## [2.7.42] - 2026-10-17
 ### Adicionado
 - UTM no botao "Continuar lendo" (todas as listagens): helper ni_continue_reading_url()
@@ -33,7 +31,7 @@
   Rolagem infinita: helper JS niUtm() nos cards REST. Parametros:
   utm_source=post-listing, utm_medium=continue-reading, utm_campaign=<slug do post>.
   Post completo (single), admin, feed e embed ficam SEM UTM — canonical/SEO intactos.
-  Backup pre-editado no Nextcloud (wp_backup/Continuar-Lendo-UTM_20261017-2115/).
+  Backup de arquivos e DB antes da mudanca.
 # Changelog
 
 Todas as mudanças notáveis deste fork são documentadas aqui.
