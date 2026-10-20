@@ -1,3 +1,16 @@
+## [2.7.45] - 2026-10-20
+### Adicionado
+- Embed de guias do GuiasInside: URL lerGuia.php?fabricante=X&sistema=Y&guia=Z
+  colada no editor vira card automaticamente (banner do sistema, titulo do guia
+  clicavel em H1, target _blank, marca GuiasInside). Handler oEmbed custom
+  + padrao de token (the_content p7/p12) para o wpautop nao fatiar o card.
+  Titulo extraido do og:title da pagina do guia (cache 30 dias via transient).
+  CSS inline com suporte a dark mode (body.ni-dark).
+### Corrigido
+- wpautop fatiava o card do embed (div/h1 internos viravam paragrafos) —
+  resolvido com tokenizacao em comentario HTML antes do wpautop.
+  Backup DB (20-10-2026—1955.sql.gz, md5 29308d75...) e functions.php v2.7.44
+  no Nextcloud (wp_backup/GuiasInside-Embed_20261020/) antes da mudanca.
 ## [2.7.44] - 2026-10-19
 ### Adicionado
 - News sitemap do Google News (GN Publisher, /gn_sitemap.xml) declarado no robots.txt

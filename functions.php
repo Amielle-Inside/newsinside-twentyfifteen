@@ -1954,6 +1954,126 @@ function ni_more_link_utm( $link_html ) {
 }
 add_filter( 'the_content_more_link', 'ni_more_link_utm' );
 
+
+/**
+ * [NI 2026-10-20] Embed de guias do GuiasInside (site secundario).
+ * Cole a URL do guia no editor e o WordPress renderiza um card com
+ * banner do sistema, titulo clicavel (H1) e target _blank.
+ * Padrao: /guias/lerGuia.php?fabricante=X&sistema=Y&guia=Z
+ */
+function ni_guiasinside_embed_handlers() {
+	wp_embed_register_handler(
+		'ni_guiasinside',
+		'#https?://(www\.)?newsinside\.org/guias/lerGuia\.php\?fabricante=([a-z0-9_-]+)&sistema=([a-z0-9_-]+)&guia=([a-z0-9_-]+)#i',
+		'ni_guiasinside_embed_callback',
+		10
+	);
+}
+add_action( 'init', 'ni_guiasinside_embed_handlers' );
+
+/**
+ * Padrao de token: URL -> comentario HTML antes do wpautop (p7),
+ * card real depois dele (p12). Impede o wpautop de fatiar o card.
+ */
+function ni_guiasinside_store( $key, $html ) {
+	static $store = array();
+	if ( null === $html ) {
+		return isset( $store[ $key ] ) ? $store[ $key ] : '';
+	}
+	$store[ $key ] = $html;
+}
+
+function ni_guiasinside_tokenize( $content ) {
+	if ( false === strpos( $content, 'lerGuia.php' ) ) {
+		return $content;
+	}
+	return preg_replace_callback(
+		'#https?://(www\.)?newsinside\.org/guias/lerGuia\.php\?fabricante=([a-z0-9_-]+)&sistema=([a-z0-9_-]+)&guia=([a-z0-9_-]+)#i',
+		function ( $m ) {
+			$html = ni_guiasinside_embed_callback( $m, array(), $m[0], array() );
+			$key  = 'NI_GUIA_' . md5( $m[0] );
+			ni_guiasinside_store( $key, $html );
+			return '<!--' . $key . '-->';
+		},
+		$content
+	);
+}
+add_filter( 'the_content', 'ni_guiasinside_tokenize', 7 );
+
+function ni_guiasinside_restore( $content ) {
+	if ( false === strpos( $content, 'NI_GUIA_' ) ) {
+		return $content;
+	}
+	// 1) token sozinho num paragrafo: remover o <p> em volta
+	$content = preg_replace_callback(
+		'/<p>\s*<!--NI_GUIA_([a-f0-9]{32})-->\s*<\/p>/',
+		function ( $m ) { return ni_guiasinside_store( 'NI_GUIA_' . $m[1], null ); },
+		$content
+	);
+	// 2) tokens restantes (inline)
+	$content = preg_replace_callback(
+		'/<!--NI_GUIA_([a-f0-9]{32})-->/',
+		function ( $m ) { return ni_guiasinside_store( 'NI_GUIA_' . $m[1], null ); },
+		$content
+	);
+	return $content;
+}
+add_filter( 'the_content', 'ni_guiasinside_restore', 12 );
+
+function ni_guiasinside_embed_title( $guia, $url ) {
+	$titulo = ucwords( str_replace( array( '-', '_' ), ' ', $guia ) );
+	$cache_key = 'ni_guia_titulo_' . md5( $guia );
+	$cached = get_transient( $cache_key );
+	if ( false !== $cached ) {
+		return $cached;
+	}
+	$response = wp_remote_get( $url, array( 'timeout' => 5 ) );
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		$body = wp_remote_retrieve_body( $response );
+		if ( preg_match( '/<meta\s+property="og:title"\s+content="([^"]+)"/i', $body, $m ) ) {
+			// og:title = "GuiasInside - BadAvatar 1.3" -> strip prefixo
+			$titulo = sanitize_text_field( preg_replace( '/^GuiasInside\s*-\s*/i', '', $m[1] ) );
+		} elseif ( preg_match_all( '/<title>\s*GuiasInside\s*-\s*([^<]+?)\s*<\/title>/i', $body, $ms ) ) {
+			// fallback: ultimo <title> da pagina (o primeiro mostra so o sistema)
+			$titulo = sanitize_text_field( end( $ms[1] ) );
+		}
+	}
+	set_transient( $cache_key, $titulo, MONTH_IN_SECONDS );
+	return $titulo;
+}
+
+function ni_guiasinside_embed_callback( $matches, $attr, $url, $rawattr ) {
+	$fabricante = sanitize_key( $matches[2] );
+	$sistema    = sanitize_key( $matches[3] );
+	$guia       = sanitize_key( $matches[4] );
+	$titulo     = ni_guiasinside_embed_title( $guia, $url );
+	$banner     = 'https://www.newsinside.org/guias/assets/sistemas/' . rawurlencode( $fabricante ) . '/' . rawurlencode( $sistema ) . '/banner.jpg';
+	$alt        = 'Banner ' . ucfirst( $sistema ) . ' - GuiasInside';
+
+	// tudo em UMA linha: wpautop nao pode inserir <p> no meio do card
+	$html = '<div class="ni-guia-card"><a class="ni-guia-link" href="' . esc_url( $url ) . '" target="_blank" rel="noopener"><img class="ni-guia-banner" src="' . esc_url( $banner ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy" /></a><h1 class="ni-guia-titulo"><a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( $titulo ) . '</a></h1><span class="ni-guia-marca">GuiasInside</span></div>';
+	return $html;
+}
+
+
+/**
+ * [NI 2026-10-20] CSS do card de embed do GuiasInside (+ dark mode).
+ */
+function ni_guiasinside_css() {
+	$css = '.ni-guia-card{margin:2em 0;padding:1.25em;border:1px solid #e0e0e0;border-radius:8px;background:#fff;text-align:center}'
+	      . '.ni-guia-link{display:block}'
+	      . '.ni-guia-banner{max-width:100%;height:auto;border-radius:6px}'
+	      . '.ni-guia-titulo{font-size:1.4em;margin:.6em 0 .3em}'
+	      . '.ni-guia-titulo a{color:inherit;text-decoration:none}'
+	      . '.ni-guia-titulo a:hover{text-decoration:underline}'
+	      . '.ni-guia-marca{display:inline-block;font-size:.75em;text-transform:uppercase;letter-spacing:.08em;color:#767676}'
+	      . 'body.ni-dark .ni-guia-card{background:#1f1f1f;border-color:#333}'
+	      . 'body.ni-dark .ni-guia-titulo a{color:#c8c8c8}'
+	      . 'body.ni-dark .ni-guia-marca{color:#8a8a8a}';
+	wp_add_inline_style( 'twentyfifteen-style', $css );
+}
+add_action( 'wp_enqueue_scripts', 'ni_guiasinside_css', 20 );
+
 /**
  * Google News sitemap (GN Publisher) no robots.txt
  */
