@@ -1,3 +1,11 @@
+## [2.7.46] - 2026-10-22
+### Adicionado
+- Anti-spam definitivo: XML-RPC desativado (xmlrpc_enabled false), metodos de
+  pingback removidos (xmlrpc_methods), header X-Pingback fora do wp_headers.
+  Complementa o fechamento em massa de comment_status/ping_status (UPDATE em
+  10.685 posts + 8.003 pings via one-time script) e defaults closed +
+  comment_registration/moderacao = 1. Bots de pingback recebem "requested
+  method pingback.ping does not exist".
 ## [2.7.45] - 2026-10-20
 ### Adicionado
 - Embed de guias do GuiasInside: URL lerGuia.php?fabricante=X&sistema=Y&guia=Z

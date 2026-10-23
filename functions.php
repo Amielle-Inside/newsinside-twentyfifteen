@@ -2074,6 +2074,34 @@ function ni_guiasinside_css() {
 }
 add_action( 'wp_enqueue_scripts', 'ni_guiasinside_css', 20 );
 
+
+/**
+ * [NI 2026-10-22] Fechar a porta de spam: XML-RPC desativado por completo
+ * (pingbacks/trackbacks eram o vetor restante dos bots).
+ */
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+// Remover os metodos de pingback do XML-RPC (defesa em profundidade,
+// caso algum plugin reative o servico).
+function ni_kill_pingback_methods( $methods ) {
+	unset( $methods['pingback.ping'], $methods['pingback.extensions.getPingbacks'] );
+	return $methods;
+}
+add_filter( 'xmlrpc_methods', 'ni_kill_pingback_methods' );
+
+// Headers de pingback fora do <head> (menos descoberta automatica pelos bots)
+function ni_remove_x_pingback( $headers ) {
+	unset( $headers['X-Pingback'] );
+	return $headers;
+}
+add_filter( 'wp_headers', 'ni_remove_x_pingback' );
+
+// Pingback de trackback na fila? nao encaminhar
+function ni_kill_trackback( $fields ) {
+	$fields['trackback_url'] = '';
+	return $fields;
+}
+
 /**
  * Google News sitemap (GN Publisher) no robots.txt
  */
