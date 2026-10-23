@@ -1,3 +1,15 @@
+## [2.7.47] - 2026-10-23
+### Adicionado
+- Wayback Machine: post arquiva logo apos o publish (transition_post_status ->
+  queue_single do plugin lh-wayback-machine + wp_maybe_spawn_cron em background).
+  Antes o post esperava o evento horario do wp-cron, que na Locaweb quase nunca
+  rodava — posts acumulavam "Queued". Com o ping externo de 5 min + spawn no
+  publish, o arquivamento sai em segundos/minutos.
+### Observacao
+- Save do archive.org e assincrono e lento (~60s): o timeout do wp_remote_get
+  pode matar o request, mas o crawl continua la (verificado: posts 33475/33464/
+  33452 arquivados com request "falhado"). Rate limit do archive.org e ~5/min
+  por IP — drenagem de fila grande precisa de ritmo serial (15s de gap).
 ## [2.7.46] - 2026-10-22
 ### Adicionado
 - Anti-spam definitivo: XML-RPC desativado (xmlrpc_enabled false), metodos de

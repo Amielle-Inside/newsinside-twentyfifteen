@@ -2102,6 +2102,23 @@ function ni_kill_trackback( $fields ) {
 	return $fields;
 }
 
+
+/**
+ * [NI 2026-10-23] Wayback Machine: arquiva o post logo apos o publish.
+ * O plugin lh-wayback-machine so processa via evento horario do wp-cron
+ * (1 post por ciclo, que na Locaweb quase nunca roda). No publish, agendamos
+ * o single event do plugin e spawnamos o wp-cron em background na hora.
+ */
+function ni_wayback_on_publish( $new_status, $old_status, $post ) {
+	if ( 'publish' === $new_status && 'publish' !== $old_status
+		&& ! wp_is_post_revision( $post )
+		&& class_exists( 'LH_wayback_machine_plugin' ) ) {
+		LH_wayback_machine_plugin::queue_single();
+		wp_maybe_spawn_cron();
+	}
+}
+add_action( 'transition_post_status', 'ni_wayback_on_publish', 10, 3 );
+
 /**
  * Google News sitemap (GN Publisher) no robots.txt
  */
